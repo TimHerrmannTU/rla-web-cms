@@ -26,7 +26,7 @@ export const Mines: CollectionConfig = {
               label: 'Location',
               admin: {
                 components: {
-                  Field: '@/components/MapField#MapField', // Path to your component
+                  Field: '@/components/cms/MapField#MapField', // Path to your component
                 },
               },
             },
