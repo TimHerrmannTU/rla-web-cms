@@ -195,7 +195,18 @@ export const Mines: CollectionConfig = {
         {
           label: 'Recreational Usage',
           description: 'Enter all recreational usage data here.',
-          fields: [],
+          fields: [
+            {
+              name: 'features',
+              type: 'relationship',
+              relationTo: 'mineFeatures',
+              hasMany: true,
+              label: 'Post-Mining Features',
+              admin: {
+                description: 'What is this site used for now?',
+              },
+            },
+          ],
         },
       ],
     },

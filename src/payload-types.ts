@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     mine: Mine;
+    mineFeatures: MineFeature;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,6 +81,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     mine: MineSelect<false> | MineSelect<true>;
+    mineFeatures: MineFeaturesSelect<false> | MineFeaturesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -203,6 +205,22 @@ export interface Mine {
     agriculture?: number | null;
     settlement?: number | null;
   };
+  /**
+   * What is this site used for now?
+   */
+  features?: (number | MineFeature)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mineFeatures".
+ */
+export interface MineFeature {
+  id: number;
+  name: string;
+  iconName?: string | null;
+  color?: ('blue' | 'green' | 'grey') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -241,6 +259,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'mine';
         value: number | Mine;
+      } | null)
+    | ({
+        relationTo: 'mineFeatures';
+        value: number | MineFeature;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -345,6 +367,18 @@ export interface MineSelect<T extends boolean = true> {
         agriculture?: T;
         settlement?: T;
       };
+  features?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mineFeatures_select".
+ */
+export interface MineFeaturesSelect<T extends boolean = true> {
+  name?: T;
+  iconName?: T;
+  color?: T;
   updatedAt?: T;
   createdAt?: T;
 }
