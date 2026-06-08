@@ -10,30 +10,20 @@ h1, h2, h3, h4, h5, h6, p, ul, ol, li, figure {
   font-size: inherit;
 }
 
-h1 {
-  font-size: var(--text-4xl);
-  font-weight: 900;
-  line-height: var(--leading-tight);
-  text-transform: uppercase;
-}
-
-h2 {
-  font-size: var(--text-2xl);
-  font-weight: 800;
-  line-height: var(--leading-snug);
-}
-
-h3 {
-  font-size: var(--text-lg);
-  font-weight: 700;
-}
-
+h1 { font-size: var(--text-4xl); }
+h2 { font-size: var(--text-2xl); }
+h3 { font-size: var(--text-lg); }
+h4 { font-size: var(--text-base); }
 p {
   font-size: var(--text-base);
   color: var(--color-slate-700);
 }
 
 body {
+  min-height: 100vh;
+  height: 100%;
+  min-width: 100vw;
+  width: 100%;
   background-color: var(--color-white);
   color: var(--color-slate-900);
   font-family: ui-sans-serif, system-ui, sans-serif;
