@@ -190,6 +190,19 @@ export interface Mine {
     };
     [k: string]: unknown;
   } | null;
+  siteType?: ('open_cast' | 'external_dump' | 'underground' | 'quarry' | 'mountaintop_removal')[] | null;
+  status?: ('in_use' | 'in_revitalization' | 'revitalized') | null;
+  closureYear?: number | null;
+  extractedMaterials?:
+    | ('coal' | 'iron' | 'bauxite' | 'copper' | 'gold' | 'lithium' | 'nickel' | 'phosphorite' | 'silver' | 'zinc')[]
+    | null;
+  surface?: {
+    total?: number | null;
+    lake?: number | null;
+    forest?: number | null;
+    agriculture?: number | null;
+    settlement?: number | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -319,6 +332,19 @@ export interface MineSelect<T extends boolean = true> {
   title?: T;
   location?: T;
   content?: T;
+  siteType?: T;
+  status?: T;
+  closureYear?: T;
+  extractedMaterials?: T;
+  surface?:
+    | T
+    | {
+        total?: T;
+        lake?: T;
+        forest?: T;
+        agriculture?: T;
+        settlement?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
