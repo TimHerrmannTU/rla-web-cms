@@ -120,7 +120,7 @@ export const Employees: CollectionConfig = {
                 },
               ],
             },
-            // TODO add Specialises in
+            // TODO add Specialises in (Fachgruppen?)
             // TODO add certificates
             // TODO add chamber membership
           ],
@@ -154,6 +154,176 @@ export const Employees: CollectionConfig = {
                 description:
                   'Please enter in international format starting with your country code.',
               },
+            },
+          ],
+        },
+        // human resources
+        {
+          name: 'werkx',
+          label: 'WerkX',
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'entry',
+                  label: 'Employment Start',
+                  type: 'date',
+                  admin: {
+                    date: {
+                      pickerAppearance: 'dayOnly',
+                      displayFormat: 'd MMM yyy',
+                    },
+                  },
+                },
+                {
+                  name: 'exit',
+                  label: 'Employment End',
+                  type: 'date',
+                  admin: {
+                    date: {
+                      pickerAppearance: 'dayOnly',
+                      displayFormat: 'd MMM yyy',
+                    },
+                  },
+                },
+                {
+                  name: 'formerEmployee',
+                  type: 'checkbox',
+                  defaultValue: false,
+                  admin: {
+                    hidden: true,
+                  },
+                  hooks: {
+                    beforeChange: [({ siblingData }) => Boolean(siblingData?.exit)],
+                  },
+                },
+              ],
+            },
+            {
+              name: 'sollHistory',
+              type: 'array',
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'targetHours',
+                      type: 'number',
+                      min: 0,
+                      max: 168,
+                      required: true,
+                    },
+                    {
+                      name: 'start',
+                      type: 'date',
+                      admin: {
+                        date: {
+                          pickerAppearance: 'dayOnly',
+                          displayFormat: 'd MMM yyy',
+                        },
+                      },
+                    },
+                    {
+                      name: 'end',
+                      type: 'date',
+                      admin: {
+                        date: {
+                          pickerAppearance: 'dayOnly',
+                          displayFormat: 'd MMM yyy',
+                        },
+                      },
+                    },
+                  ],
+                },
+                {
+                  name: 'distribution',
+                  type: 'group',
+                  label: 'Daily Soll Distribution',
+                  fields: [
+                    {
+                      type: 'row',
+                      fields: [
+                        {
+                          name: 'mo',
+                          type: 'number',
+                          min: 0,
+                          max: 24,
+                          defaultValue: 8,
+                          label: 'MO',
+                        },
+                        {
+                          name: 'di',
+                          type: 'number',
+                          min: 0,
+                          max: 24,
+                          defaultValue: 8,
+                          label: 'DI',
+                        },
+                        {
+                          name: 'mi',
+                          type: 'number',
+                          min: 0,
+                          max: 24,
+                          defaultValue: 8,
+                          label: 'MI',
+                        },
+                        {
+                          name: 'do',
+                          type: 'number',
+                          min: 0,
+                          max: 24,
+                          defaultValue: 8,
+                          label: 'DO',
+                        },
+                        {
+                          name: 'fr',
+                          type: 'number',
+                          min: 0,
+                          max: 24,
+                          defaultValue: 8,
+                          label: 'FR',
+                        },
+                        {
+                          name: 'sa',
+                          type: 'number',
+                          min: 0,
+                          max: 24,
+                          defaultValue: 0,
+                          label: 'SA',
+                        },
+                        {
+                          name: 'so',
+                          type: 'number',
+                          min: 0,
+                          max: 24,
+                          defaultValue: 0,
+                          label: 'SO',
+                        },
+                      ],
+                    },
+                  ],
+                  validate: (value, { siblingData }) => {
+                    const day_mo = Number(value?.mo || 0)
+                    const day_di = Number(value?.di || 0)
+                    const day_mi = Number(value?.mi || 0)
+                    const day_do = Number(value?.do || 0)
+                    const day_fr = Number(value?.fr || 0)
+                    const day_sa = Number(value?.sa || 0)
+                    const day_so = Number(value?.so || 0)
+
+                    const sum = day_mo + day_di + day_mi + day_do + day_fr + day_sa + day_so
+
+                    const target = Number(siblingData?.targetHours || 0)
+
+                    if (sum !== target) {
+                      return `The sum of daily hours (${sum}h) must exactly match the Target Hours (${target}h). Please adjust.`
+                    }
+
+                    return true
+                  },
+                },
+              ],
             },
           ],
         },

@@ -207,6 +207,28 @@ export interface Employee {
    * Please enter in international format starting with your country code.
    */
   mobilePhone?: string | null;
+  werkx?: {
+    entry?: string | null;
+    exit?: string | null;
+    formerEmployee?: boolean | null;
+    sollHistory?:
+      | {
+          targetHours: number;
+          start?: string | null;
+          end?: string | null;
+          distribution?: {
+            mo?: number | null;
+            di?: number | null;
+            mi?: number | null;
+            do?: number | null;
+            fr?: number | null;
+            sa?: number | null;
+            so?: number | null;
+          };
+          id?: string | null;
+        }[]
+      | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -416,6 +438,32 @@ export interface EmployeeSelect<T extends boolean = true> {
   email?: T;
   phone?: T;
   mobilePhone?: T;
+  werkx?:
+    | T
+    | {
+        entry?: T;
+        exit?: T;
+        formerEmployee?: T;
+        sollHistory?:
+          | T
+          | {
+              targetHours?: T;
+              start?: T;
+              end?: T;
+              distribution?:
+                | T
+                | {
+                    mo?: T;
+                    di?: T;
+                    mi?: T;
+                    do?: T;
+                    fr?: T;
+                    sa?: T;
+                    so?: T;
+                  };
+              id?: T;
+            };
+      };
   updatedAt?: T;
   createdAt?: T;
 }
