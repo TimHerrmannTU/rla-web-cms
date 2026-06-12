@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     employee: Employee;
+    officeLocation: OfficeLocation;
     mine: Mine;
     mineFeatures: MineFeature;
     'payload-kv': PayloadKv;
@@ -82,6 +83,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     employee: EmployeeSelect<false> | EmployeeSelect<true>;
+    officeLocation: OfficeLocationSelect<false> | OfficeLocationSelect<true>;
     mine: MineSelect<false> | MineSelect<true>;
     mineFeatures: MineFeaturesSelect<false> | MineFeaturesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -235,6 +237,36 @@ export interface Employee {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "officeLocation".
+ */
+export interface OfficeLocation {
+  id: number;
+  name?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * @minItems 2
+   * @maxItems 2
+   */
+  location?: [number, number] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "mine".
  */
 export interface Mine {
@@ -327,6 +359,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'employee';
         value: number | Employee;
+      } | null)
+    | ({
+        relationTo: 'officeLocation';
+        value: number | OfficeLocation;
       } | null)
     | ({
         relationTo: 'mine';
@@ -466,6 +502,17 @@ export interface EmployeeSelect<T extends boolean = true> {
               id?: T;
             };
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "officeLocation_select".
+ */
+export interface OfficeLocationSelect<T extends boolean = true> {
+  name?: T;
+  content?: T;
+  location?: T;
   updatedAt?: T;
   createdAt?: T;
 }

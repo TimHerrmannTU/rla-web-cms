@@ -5,6 +5,7 @@ export const Mines: CollectionConfig = {
   slug: 'mine',
   admin: {
     useAsTitle: 'title',
+    group: 'Minescapes',
   },
   fields: [
     {

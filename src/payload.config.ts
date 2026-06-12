@@ -9,6 +9,7 @@ import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 
 import { Employees } from './collections/Employee'
+import { OfficeLocation } from './collections/OfficeLocation'
 
 import { Mines } from './collections/Mines'
 import { MineFeatures } from './collections/MineFeatures'
@@ -23,7 +24,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Employees, Mines, MineFeatures],
+  collections: [Users, Media, Employees, OfficeLocation, Mines, MineFeatures],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

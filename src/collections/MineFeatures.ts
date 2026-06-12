@@ -4,6 +4,7 @@ export const MineFeatures: CollectionConfig = {
   slug: 'mineFeatures',
   admin: {
     useAsTitle: 'name',
+    group: 'Minescapes',
     defaultColumns: ['name', 'iconName', 'color'],
   },
   fields: [
