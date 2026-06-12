@@ -225,6 +225,7 @@ export interface Employee {
             sa?: number | null;
             so?: number | null;
           };
+          description?: string | null;
           id?: string | null;
         }[]
       | null;
@@ -461,6 +462,7 @@ export interface EmployeeSelect<T extends boolean = true> {
                     sa?: T;
                     so?: T;
                   };
+              description?: T;
               id?: T;
             };
       };

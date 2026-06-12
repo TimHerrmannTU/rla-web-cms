@@ -323,6 +323,10 @@ export const Employees: CollectionConfig = {
                     return true
                   },
                 },
+                {
+                  name: 'description',
+                  type: 'text',
+                },
               ],
             },
           ],
