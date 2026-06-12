@@ -1,11 +1,12 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+
+import React from 'react'
 import { useField } from '@payloadcms/ui'
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
-// Fix for default Leaflet icons in Next.js
+// Safe to define here because this file is only loaded in the browser
 const icon = L.icon({
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
@@ -13,14 +14,9 @@ const icon = L.icon({
   iconAnchor: [12, 41],
 })
 
-export const MapField: React.FC<{ path: string }> = ({ path }) => {
+export default function MapFieldClient({ path }: { path: string }) {
   // useField connects our component to Payload's database state
   const { value, setValue } = useField<[number, number]>({ path })
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   // Update the field value when the map is clicked
   const MapEvents = () => {
@@ -31,8 +27,6 @@ export const MapField: React.FC<{ path: string }> = ({ path }) => {
     })
     return null
   }
-
-  if (!mounted) return <p>Loading Map...</p>
 
   const center: [number, number] = value ? [value[1], value[0]] : [51.505, -0.09]
 
