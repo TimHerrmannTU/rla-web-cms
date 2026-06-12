@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    employee: Employee;
     mine: Mine;
     mineFeatures: MineFeature;
     'payload-kv': PayloadKv;
@@ -80,6 +81,7 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    employee: EmployeeSelect<false> | EmployeeSelect<true>;
     mine: MineSelect<false> | MineSelect<true>;
     mineFeatures: MineFeaturesSelect<false> | MineFeaturesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -164,6 +166,44 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "employee".
+ */
+export interface Employee {
+  id: number;
+  firstName: string;
+  lastName: string;
+  fullName?: string | null;
+  birthday: string;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  higherEducation?: string | null;
+  email: string;
+  /**
+   * Please enter in international format starting with your country code.
+   */
+  phone?: string | null;
+  /**
+   * Please enter in international format starting with your country code.
+   */
+  mobilePhone?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -257,6 +297,10 @@ export interface PayloadLockedDocument {
         value: number | Media;
       } | null)
     | ({
+        relationTo: 'employee';
+        value: number | Employee;
+      } | null)
+    | ({
         relationTo: 'mine';
         value: number | Mine;
       } | null)
@@ -345,6 +389,23 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "employee_select".
+ */
+export interface EmployeeSelect<T extends boolean = true> {
+  firstName?: T;
+  lastName?: T;
+  fullName?: T;
+  birthday?: T;
+  content?: T;
+  higherEducation?: T;
+  email?: T;
+  phone?: T;
+  mobilePhone?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
