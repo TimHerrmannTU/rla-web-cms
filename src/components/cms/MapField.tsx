@@ -31,10 +31,7 @@ export default function MapFieldClient({ path }: { path: string }) {
   const center: [number, number] = value ? [value[1], value[0]] : [51.505, -0.09]
 
   return (
-    <div style={{ marginBottom: '20px' }}>
-      <label className="field-label" style={{ marginBottom: '10px', display: 'block' }}>
-        Location Picker (Click map to set)
-      </label>
+    <div style={{ marginBottom: '20px', flexGrow: '1' }}>
       <div style={{ height: '400px', width: '100%', borderRadius: '4px', overflow: 'hidden' }}>
         <MapContainer
           center={center}
@@ -46,6 +43,9 @@ export default function MapFieldClient({ path }: { path: string }) {
           <MapEvents />
         </MapContainer>
       </div>
+      <label className="field-label" style={{ display: 'block' }}>
+        Location Picker (Click map to set)
+      </label>
       <div style={{ marginTop: '10px', display: 'flex', gap: '10px' }}>
         <code>Longitude: {value?.[0]}</code>
         <code>Latitude: {value?.[1]}</code>

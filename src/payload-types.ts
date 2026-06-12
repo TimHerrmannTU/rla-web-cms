@@ -257,11 +257,26 @@ export interface OfficeLocation {
     };
     [k: string]: unknown;
   } | null;
-  /**
-   * @minItems 2
-   * @maxItems 2
-   */
-  location?: [number, number] | null;
+  adress?: {
+    /**
+     * @minItems 2
+     * @maxItems 2
+     */
+    coords?: [number, number] | null;
+    details?: {
+      country?: string | null;
+      city?: string | null;
+      zip?: number | null;
+      street?: string | null;
+      more?: string | null;
+    };
+  };
+  contact?: {
+    tel?: string | null;
+    fax?: string | null;
+    email?: string | null;
+    emailIntern?: string | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -512,7 +527,28 @@ export interface EmployeeSelect<T extends boolean = true> {
 export interface OfficeLocationSelect<T extends boolean = true> {
   name?: T;
   content?: T;
-  location?: T;
+  adress?:
+    | T
+    | {
+        coords?: T;
+        details?:
+          | T
+          | {
+              country?: T;
+              city?: T;
+              zip?: T;
+              street?: T;
+              more?: T;
+            };
+      };
+  contact?:
+    | T
+    | {
+        tel?: T;
+        fax?: T;
+        email?: T;
+        emailIntern?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
