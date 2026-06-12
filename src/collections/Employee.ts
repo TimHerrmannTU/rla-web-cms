@@ -68,11 +68,52 @@ export const Employees: CollectionConfig = {
           fields: [
             {
               name: 'higherEducation',
-              type: 'text',
-              admin: {
-                placeholder: 'Dipl. Ing. Landscape Architecture',
-              },
+              label: 'Highest Education',
+              type: 'group',
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'type',
+                      type: 'select',
+                      options: [
+                        { value: 'bachelor', label: 'Bachelor' },
+                        { value: 'master', label: 'Master' },
+                        { value: 'diplom', label: 'Diplom' },
+                        { value: 'doctor', label: 'Doctor' },
+                        { value: 'professor', label: 'Professor' },
+                        { value: 'vocationalTraining', label: 'Vocational Training' },
+                        { value: 'other', label: 'Other' },
+                      ],
+                      admin: {
+                        width: '25%',
+                      },
+                    },
+                    {
+                      name: 'subType',
+                      type: 'select',
+                      options: [
+                        { value: 'art', label: 'of Arts' },
+                        { value: 'sci', label: 'of Science' },
+                        { value: 'eng', label: 'of Engineering' },
+                        { value: 'ing', label: 'Ingenieur' },
+                      ],
+                      admin: {
+                        width: '25%',
+                        condition: (data, siblingData) =>
+                          ['bachelor', 'master', 'diplom'].includes(siblingData?.type),
+                      },
+                    },
+                    {
+                      name: 'name',
+                      type: 'text',
+                    },
+                  ],
+                },
+              ],
             },
+            // TODO add other skills (e.g. certificates, memberships etc)
           ],
         },
         // contact

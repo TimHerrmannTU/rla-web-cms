@@ -192,7 +192,11 @@ export interface Employee {
     };
     [k: string]: unknown;
   } | null;
-  higherEducation?: string | null;
+  higherEducation?: {
+    type?: ('bachelor' | 'master' | 'diplom' | 'doctor' | 'professor' | 'vocationalTraining' | 'other') | null;
+    subType?: ('art' | 'sci' | 'eng' | 'ing') | null;
+    name?: string | null;
+  };
   email: string;
   /**
    * Please enter in international format starting with your country code.
@@ -400,7 +404,13 @@ export interface EmployeeSelect<T extends boolean = true> {
   fullName?: T;
   birthday?: T;
   content?: T;
-  higherEducation?: T;
+  higherEducation?:
+    | T
+    | {
+        type?: T;
+        subType?: T;
+        name?: T;
+      };
   email?: T;
   phone?: T;
   mobilePhone?: T;
