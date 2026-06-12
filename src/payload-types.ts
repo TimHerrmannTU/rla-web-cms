@@ -196,6 +196,7 @@ export interface Employee {
     type?: ('bachelor' | 'master' | 'diplom' | 'doctor' | 'professor' | 'vocationalTraining' | 'other') | null;
     subType?: ('art' | 'sci' | 'eng' | 'ing') | null;
     name?: string | null;
+    location?: string | null;
   };
   email: string;
   /**
@@ -410,6 +411,7 @@ export interface EmployeeSelect<T extends boolean = true> {
         type?: T;
         subType?: T;
         name?: T;
+        location?: T;
       };
   email?: T;
   phone?: T;

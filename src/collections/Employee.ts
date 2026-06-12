@@ -87,7 +87,7 @@ export const Employees: CollectionConfig = {
                         { value: 'other', label: 'Other' },
                       ],
                       admin: {
-                        width: '25%',
+                        width: '20%',
                       },
                     },
                     {
@@ -100,7 +100,7 @@ export const Employees: CollectionConfig = {
                         { value: 'ing', label: 'Ingenieur' },
                       ],
                       admin: {
-                        width: '25%',
+                        width: '20%',
                         condition: (data, siblingData) =>
                           ['bachelor', 'master', 'diplom'].includes(siblingData?.type),
                       },
@@ -109,11 +109,20 @@ export const Employees: CollectionConfig = {
                       name: 'name',
                       type: 'text',
                     },
+                    {
+                      name: 'location',
+                      type: 'text',
+                      admin: {
+                        placeholder: 'e.g. TU Dresden',
+                      },
+                    },
                   ],
                 },
               ],
             },
-            // TODO add other skills (e.g. certificates, memberships etc)
+            // TODO add Specialises in
+            // TODO add certificates
+            // TODO add chamber membership
           ],
         },
         // contact
