@@ -179,7 +179,7 @@ export interface Employee {
   lastName: string;
   fullName?: string | null;
   birthday?: string | null;
-  office: number | OfficeLocation;
+  office?: (number | null) | OfficeLocation;
   content?: {
     root: {
       type: string;
@@ -272,7 +272,7 @@ export interface OfficeLocation {
     details?: {
       country?: string | null;
       city?: string | null;
-      zip?: number | null;
+      zip?: string | null;
       street?: string | null;
       more?: string | null;
     };

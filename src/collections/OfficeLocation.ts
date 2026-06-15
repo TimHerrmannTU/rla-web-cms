@@ -70,7 +70,7 @@ export const OfficeLocations: CollectionConfig = {
                         },
                         {
                           name: 'zip',
-                          type: 'number',
+                          type: 'text',
                         },
                         {
                           name: 'street',

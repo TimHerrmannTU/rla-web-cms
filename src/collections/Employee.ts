@@ -56,7 +56,6 @@ export const Employees: CollectionConfig = {
               name: 'office',
               type: 'relationship',
               relationTo: 'officeLocation',
-              required: true,
             },
             {
               name: 'content',

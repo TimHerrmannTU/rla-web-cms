@@ -1,54 +1,43 @@
 // scripts/process-wp.ts
-import 'dotenv/config'
 import fs from 'fs'
 
 interface RawWpRecord {
   id: number
   title?: { rendered?: string }
+  categories?: number[]
   acf?: {
     vorname?: string
-    name?: string // Last name in your ACF config
+    name?: string
     email?: string
     telefon?: string
     'mobil-telefon'?: string
     team?: string | null
     'uni-abschluss'?: string
-    retired?: boolean | number
+    retired?: boolean | number | null
     birthday?: string
   }
 }
 
-async function processWpData() {
+export async function processWp() {
   const rawPath = './migration/wp_raw.json'
   const processedPath = './migration/wp_processed.json'
 
   if (!fs.existsSync(rawPath)) {
-    console.error(
-      `Error: Raw file not found at ${rawPath}. Please run the extraction script first.`,
-    )
-    process.exit(1)
+    throw new Error(`Raw WordPress file not found at ${rawPath}`)
   }
 
   const rawData: RawWpRecord[] = JSON.parse(fs.readFileSync(rawPath, 'utf-8'))
-  console.log(`Processing ${rawData.length} raw WordPress records using ACF mappings...\n`)
+  console.log(`Processing ${rawData.length} raw WordPress records...`)
 
   const processedRecords: any[] = []
-  const errors: string[] = []
 
   for (const raw of rawData) {
-    const wpId = raw.id
     const acf = raw.acf
+    if (!acf) continue
 
-    if (!acf) {
-      errors.push(`[WP ID: ${wpId}] Skipped: No ACF metadata found on this post.`)
-      continue
-    }
-
-    // --- 1. NAME RESOLUTION ---
     let first = acf.vorname?.trim() || ''
-    let last = acf.name?.trim() || '' // "name" in your config represents Last Name
+    let last = acf.name?.trim() || ''
 
-    // Fallback split if ACF is completely empty
     if (!first || !last) {
       const renderedTitle = raw.title?.rendered?.trim() || ''
       const parts = renderedTitle.split(' ')
@@ -58,13 +47,8 @@ async function processWpData() {
       }
     }
 
-    // --- 2. MINIMAL VALIDATION (Require at least a name to prevent blank records) ---
-    if (!first && !last) {
-      errors.push(`[WP ID: ${wpId}] Skipped: Employee has no first or last name.`)
-      continue
-    }
+    if (!first && !last) continue
 
-    // --- 3. OPTIONAL FIELD NORMALIZATION ---
     const email = acf.email?.toLowerCase().trim() || null
 
     let birthday: string | null = null
@@ -75,18 +59,34 @@ async function processWpData() {
       }
     }
 
-    // --- 4. MAP TO PAYLOAD SCHEMA ---
+    let officeId: string | null = null
+    const wpCategories = raw.categories || []
+    if (wpCategories.includes(626)) officeId = '2'
+    else if (wpCategories.includes(625)) officeId = '1'
+    else if (wpCategories.includes(629)) officeId = '5'
+    else if (wpCategories.includes(628)) officeId = '4'
+    else if (wpCategories.includes(627)) officeId = '3'
+
+    let formerEmployee: boolean | null = null
+    let exitDate: string | null = null
+
+    if (acf.retired !== undefined && acf.retired !== null) {
+      formerEmployee = Boolean(acf.retired)
+      if (formerEmployee) {
+        exitDate = new Date().toISOString() // Fallback to satisfy hook [1.2.1]
+      }
+    }
+
     const payloadEmployee = {
       firstName: first || null,
       lastName: last || null,
-      birthday: birthday, // Now cleanly defaults to null if missing
+      birthday: birthday,
+      office: officeId,
 
-      // Contact tab
-      email: email, // Now cleanly defaults to null if missing
+      email: email,
       phone: acf.telefon?.trim() || null,
       mobilePhone: acf['mobil-telefon']?.trim() || null,
 
-      // Education mapping
       higherEducation: {
         type: 'other',
         name: acf['uni-abschluss']?.trim() || null,
@@ -94,15 +94,14 @@ async function processWpData() {
       },
 
       _migrationMetadata: {
-        legacyWpId: wpId,
+        legacyWpId: raw.id,
         wpTeam: acf.team || null,
       },
 
-      // HR metadata (werkx)
       werkx: {
-        entry: null, // To be merged from SQL tables later
-        exit: null, // To be merged from SQL tables later
-        formerEmployee: Boolean(acf.retired), // Converts true_false to boolean
+        entry: null,
+        exit: exitDate,
+        formerEmployee: formerEmployee,
         sollHistory: [],
       },
     }
@@ -110,20 +109,6 @@ async function processWpData() {
     processedRecords.push(payloadEmployee)
   }
 
-  // Save the cleanly mapped records
   fs.writeFileSync(processedPath, JSON.stringify(processedRecords, null, 2))
-
-  // --- REPORT ---
-  console.log('--- PROCESSING COMPLETE ---')
-  console.log(`Successfully mapped: ${processedRecords.length} records.`)
-  console.log(`Failed / Skipped: ${errors.length} records.`)
-
-  if (errors.length > 0) {
-    console.log('\n--- SKIPPED RECORDS (CRITICAL ERRORS) ---')
-    errors.forEach((err) => console.log(err))
-  }
-
-  console.log('\nProcessed data successfully saved to ./migration/wp_processed.json')
+  console.log(`WordPress processing complete. Saved to: ${processedPath}`)
 }
-
-processWpData().catch(console.error)
