@@ -45,7 +45,6 @@ export const Employees: CollectionConfig = {
             {
               name: 'birthday',
               type: 'date',
-              required: true,
               admin: {
                 date: {
                   pickerAppearance: 'dayOnly',
@@ -139,7 +138,6 @@ export const Employees: CollectionConfig = {
               name: 'email',
               type: 'email',
               label: 'Company Email',
-              required: true,
             },
             {
               name: 'phone',

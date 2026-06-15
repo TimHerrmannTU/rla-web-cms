@@ -178,7 +178,7 @@ export interface Employee {
   firstName: string;
   lastName: string;
   fullName?: string | null;
-  birthday: string;
+  birthday?: string | null;
   office: number | OfficeLocation;
   content?: {
     root: {
@@ -201,7 +201,7 @@ export interface Employee {
     name?: string | null;
     location?: string | null;
   };
-  email: string;
+  email?: string | null;
   /**
    * Please enter in international format starting with your country code.
    */
