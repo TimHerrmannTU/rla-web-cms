@@ -6,6 +6,11 @@ export const Employees: CollectionConfig = {
   admin: {
     useAsTitle: 'fullName',
     defaultColumns: ['fullName', 'birthday', 'office', 'email'],
+    baseListFilter: () => ({
+      'werkx.formerEmployee': {
+        not_equals: true, // Hides employees where formerEmployee equals true
+      },
+    }),
   },
   fields: [
     {
@@ -315,7 +320,7 @@ export const Employees: CollectionConfig = {
                       ],
                     },
                   ],
-                  validate: (value, { siblingData }) => {
+                  validate: (value: any, { siblingData }: any) => {
                     const day_mo = Number(value?.mo || 0)
                     const day_di = Number(value?.di || 0)
                     const day_mi = Number(value?.mi || 0)
