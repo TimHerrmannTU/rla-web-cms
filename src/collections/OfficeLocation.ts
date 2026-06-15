@@ -28,6 +28,7 @@ export const OfficeLocations: CollectionConfig = {
             {
               name: 'content',
               type: 'richText',
+              localized: true,
               editor: lexicalEditor({
                 features: ({ defaultFeatures }) => [...defaultFeatures, FixedToolbarFeature()],
               }),

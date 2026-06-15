@@ -8,6 +8,7 @@ import sharp from 'sharp'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 
+import { News } from './collections/News'
 import { Employees } from './collections/Employee'
 import { OfficeLocations } from './collections/OfficeLocation'
 
@@ -24,11 +25,25 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Employees, OfficeLocations, Mines, MineFeatures],
+  collections: [Users, Media, News, Employees, OfficeLocations, Mines, MineFeatures],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
+  },
+  localization: {
+    locales: [
+      {
+        label: 'Deutsch',
+        code: 'de',
+      },
+      {
+        label: 'English',
+        code: 'en',
+      },
+    ],
+    defaultLocale: 'de',
+    fallback: true,
   },
   db: postgresAdapter({
     pool: {
