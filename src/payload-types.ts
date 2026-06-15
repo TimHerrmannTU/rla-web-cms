@@ -247,6 +247,7 @@ export interface Employee {
 export interface OfficeLocation {
   id: number;
   name?: string | null;
+  leader?: (number | null) | Employee;
   content?: {
     root: {
       type: string;
@@ -533,6 +534,7 @@ export interface EmployeeSelect<T extends boolean = true> {
  */
 export interface OfficeLocationSelect<T extends boolean = true> {
   name?: T;
+  leader?: T;
   content?: T;
   adress?:
     | T

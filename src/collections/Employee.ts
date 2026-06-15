@@ -5,6 +5,7 @@ export const Employees: CollectionConfig = {
   slug: 'employee',
   admin: {
     useAsTitle: 'fullName',
+    defaultColumns: ['fullName', 'birthday', 'office', 'email'],
   },
   fields: [
     {
@@ -249,6 +250,7 @@ export const Employees: CollectionConfig = {
                     },
                   ],
                 },
+                // distribution
                 {
                   name: 'distribution',
                   type: 'group',

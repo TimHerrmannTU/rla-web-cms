@@ -5,6 +5,7 @@ export const OfficeLocations: CollectionConfig = {
   slug: 'officeLocation',
   admin: {
     useAsTitle: 'name',
+    defaultColumns: ['name', 'leader', 'content'],
   },
   fields: [
     {
@@ -19,13 +20,18 @@ export const OfficeLocations: CollectionConfig = {
               type: 'text',
             },
             {
+              name: 'leader',
+              type: 'relationship',
+              relationTo: 'employee',
+              required: false,
+            },
+            {
               name: 'content',
               type: 'richText',
               editor: lexicalEditor({
                 features: ({ defaultFeatures }) => [...defaultFeatures, FixedToolbarFeature()],
               }),
             },
-            // TODO relationship to employees for office leader
           ],
         },
         // location
