@@ -179,6 +179,7 @@ export interface Employee {
   lastName: string;
   fullName?: string | null;
   birthday: string;
+  office: number | OfficeLocation;
   content?: {
     root: {
       type: string;
@@ -210,6 +211,10 @@ export interface Employee {
    */
   mobilePhone?: string | null;
   werkx?: {
+    /**
+     * aka Kuerzel
+     */
+    slug?: string | null;
     entry?: string | null;
     exit?: string | null;
     formerEmployee?: boolean | null;
@@ -478,6 +483,7 @@ export interface EmployeeSelect<T extends boolean = true> {
   lastName?: T;
   fullName?: T;
   birthday?: T;
+  office?: T;
   content?: T;
   higherEducation?:
     | T
@@ -493,6 +499,7 @@ export interface EmployeeSelect<T extends boolean = true> {
   werkx?:
     | T
     | {
+        slug?: T;
         entry?: T;
         exit?: T;
         formerEmployee?: T;

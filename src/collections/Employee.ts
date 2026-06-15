@@ -47,12 +47,17 @@ export const Employees: CollectionConfig = {
               required: true,
               admin: {
                 date: {
-                  pickerAppearance: 'monthOnly',
-                  displayFormat: 'MMMM yyyy',
+                  pickerAppearance: 'dayOnly',
+                  displayFormat: 'dd.MM.yyyy',
                 },
               },
             },
-            // TODO add relationship to office location
+            {
+              name: 'office',
+              type: 'relationship',
+              relationTo: 'officeLocation',
+              required: true,
+            },
             {
               name: 'content',
               type: 'richText',
@@ -166,13 +171,21 @@ export const Employees: CollectionConfig = {
               type: 'row',
               fields: [
                 {
+                  name: 'slug',
+                  type: 'text',
+                  admin: {
+                    width: '150px',
+                    description: 'aka Kuerzel',
+                  },
+                },
+                {
                   name: 'entry',
                   label: 'Employment Start',
                   type: 'date',
                   admin: {
                     date: {
                       pickerAppearance: 'dayOnly',
-                      displayFormat: 'd MMM yyy',
+                      displayFormat: 'dd.MM.yyyy',
                     },
                   },
                 },
@@ -183,7 +196,7 @@ export const Employees: CollectionConfig = {
                   admin: {
                     date: {
                       pickerAppearance: 'dayOnly',
-                      displayFormat: 'd MMM yyy',
+                      displayFormat: 'dd.MM.yyyy',
                     },
                   },
                 },
@@ -220,7 +233,7 @@ export const Employees: CollectionConfig = {
                       admin: {
                         date: {
                           pickerAppearance: 'dayOnly',
-                          displayFormat: 'd MMM yyy',
+                          displayFormat: 'dd.MM.yyyy',
                         },
                       },
                     },
@@ -230,7 +243,7 @@ export const Employees: CollectionConfig = {
                       admin: {
                         date: {
                           pickerAppearance: 'dayOnly',
-                          displayFormat: 'd MMM yyy',
+                          displayFormat: 'dd.MM.yyyy',
                         },
                       },
                     },

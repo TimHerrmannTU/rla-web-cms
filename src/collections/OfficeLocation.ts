@@ -1,10 +1,10 @@
 import type { CollectionConfig } from 'payload'
 import { lexicalEditor, FixedToolbarFeature } from '@payloadcms/richtext-lexical'
 
-export const OfficeLocation: CollectionConfig = {
+export const OfficeLocations: CollectionConfig = {
   slug: 'officeLocation',
   admin: {
-    useAsTitle: '',
+    useAsTitle: 'name',
   },
   fields: [
     {
