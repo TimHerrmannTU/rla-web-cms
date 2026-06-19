@@ -1,3 +1,4 @@
+import { colorField } from '@/fields/color'
 import type { CollectionConfig } from 'payload'
 
 export const ProjectFlags: CollectionConfig = {
@@ -35,14 +36,7 @@ export const ProjectFlags: CollectionConfig = {
             description: 'in hours',
           },
         },
-        {
-          name: 'color',
-          type: 'text',
-          admin: {
-            width: '25%',
-            description: 'hex code only',
-          },
-        },
+        colorField,
       ],
     },
     {

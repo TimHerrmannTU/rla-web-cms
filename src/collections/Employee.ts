@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { lexicalEditor, FixedToolbarFeature } from '@payloadcms/richtext-lexical'
+import { colorField } from '@/fields/color'
 
 export const Employees: CollectionConfig = {
   slug: 'employee',
@@ -181,14 +182,7 @@ export const Employees: CollectionConfig = {
                     description: 'aka Kuerzel',
                   },
                 },
-                {
-                  name: 'color',
-                  type: 'text',
-                  admin: {
-                    placeholder: '#55AAFF',
-                    description: 'hex code only',
-                  },
-                },
+                colorField,
                 {
                   name: 'entry',
                   label: 'Employment Start',

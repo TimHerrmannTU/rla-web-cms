@@ -431,9 +431,21 @@ export interface MineFeature {
  */
 export interface Project {
   id: string;
-  name: string;
-  color?: string | null;
   creationDate?: string | null;
+  name: string;
+  status?: ('planning' | 'construction' | 'done' | 'partially_done' | 'finished' | 'paused' | 'canceled') | null;
+  /**
+   * can be forecast aswell
+   */
+  yearCompletion?: number | null;
+  /**
+   * in ha
+   */
+  surfaceArea?: number | null;
+  /**
+   * hex code only
+   */
+  color?: string | null;
   active?: boolean | null;
   updatedAt: string;
   createdAt: string;
@@ -829,9 +841,12 @@ export interface MineFeaturesSelect<T extends boolean = true> {
  */
 export interface ProjectSelect<T extends boolean = true> {
   id?: T;
-  name?: T;
-  color?: T;
   creationDate?: T;
+  name?: T;
+  status?: T;
+  yearCompletion?: T;
+  surfaceArea?: T;
+  color?: T;
   active?: T;
   updatedAt?: T;
   createdAt?: T;

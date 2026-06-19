@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { lexicalEditor, FixedToolbarFeature } from '@payloadcms/richtext-lexical'
-import { locationField } from '../fields/location' // Import the reusable field
+import { locationField } from '../fields/location'
 
 export const OfficeLocations: CollectionConfig = {
   slug: 'officeLocation',
