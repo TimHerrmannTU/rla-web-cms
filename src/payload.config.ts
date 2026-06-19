@@ -12,6 +12,12 @@ import { News } from './collections/News'
 import { Employees } from './collections/Employee'
 import { OfficeLocations } from './collections/OfficeLocation'
 
+import { Projects } from './collections/projects/Projects'
+import { ProjectPhases } from './collections/projects/ProjectPhases'
+import { ProjectPartials } from './collections/projects/ProjectPartials'
+import { ProjectServices } from './collections/projects/ProjectServices'
+import { ProjectFlags } from './collections/projects/ProjectFlags'
+
 import { Mines } from './collections/Mines'
 import { MineFeatures } from './collections/MineFeatures'
 
@@ -25,7 +31,20 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, News, Employees, OfficeLocations, Mines, MineFeatures],
+  collections: [
+    Users,
+    Media,
+    News,
+    Employees,
+    OfficeLocations,
+    Mines,
+    MineFeatures,
+    Projects,
+    ProjectPhases,
+    ProjectPartials,
+    ProjectServices,
+    ProjectFlags,
+  ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

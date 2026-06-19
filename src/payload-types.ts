@@ -74,6 +74,11 @@ export interface Config {
     officeLocation: OfficeLocation;
     mine: Mine;
     mineFeatures: MineFeature;
+    project: Project;
+    projectPhase: ProjectPhase;
+    projectPartial: ProjectPartial;
+    projectService: ProjectService;
+    projectFlag: ProjectFlag;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -88,6 +93,11 @@ export interface Config {
     officeLocation: OfficeLocationSelect<false> | OfficeLocationSelect<true>;
     mine: MineSelect<false> | MineSelect<true>;
     mineFeatures: MineFeaturesSelect<false> | MineFeaturesSelect<true>;
+    project: ProjectSelect<false> | ProjectSelect<true>;
+    projectPhase: ProjectPhaseSelect<false> | ProjectPhaseSelect<true>;
+    projectPartial: ProjectPartialSelect<false> | ProjectPartialSelect<true>;
+    projectService: ProjectServiceSelect<false> | ProjectServiceSelect<true>;
+    projectFlag: ProjectFlagSelect<false> | ProjectFlagSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -415,6 +425,71 @@ export interface MineFeature {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "project".
+ */
+export interface Project {
+  id: number;
+  projectId: string;
+  name: string;
+  color?: string | null;
+  creationDate?: string | null;
+  active?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projectPhase".
+ */
+export interface ProjectPhase {
+  id: number;
+  phaseCode: string;
+  name: string;
+  project: number | Project;
+  phaseGroup?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projectPartial".
+ */
+export interface ProjectPartial {
+  id: number;
+  name: string;
+  project: number | Project;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projectService".
+ */
+export interface ProjectService {
+  id: number;
+  name: string;
+  project: number | Project;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projectFlag".
+ */
+export interface ProjectFlag {
+  id: number;
+  flagCode: string;
+  name: string;
+  color?: string | null;
+  project: number | Project;
+  timeBudget?: number | null;
+  linkedPartial?: (number | null) | ProjectPartial;
+  linkedService?: (number | null) | ProjectService;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -464,6 +539,26 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'mineFeatures';
         value: number | MineFeature;
+      } | null)
+    | ({
+        relationTo: 'project';
+        value: number | Project;
+      } | null)
+    | ({
+        relationTo: 'projectPhase';
+        value: number | ProjectPhase;
+      } | null)
+    | ({
+        relationTo: 'projectPartial';
+        value: number | ProjectPartial;
+      } | null)
+    | ({
+        relationTo: 'projectService';
+        value: number | ProjectService;
+      } | null)
+    | ({
+        relationTo: 'projectFlag';
+        value: number | ProjectFlag;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -717,6 +812,66 @@ export interface MineFeaturesSelect<T extends boolean = true> {
   name?: T;
   iconName?: T;
   color?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "project_select".
+ */
+export interface ProjectSelect<T extends boolean = true> {
+  projectId?: T;
+  name?: T;
+  color?: T;
+  creationDate?: T;
+  active?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projectPhase_select".
+ */
+export interface ProjectPhaseSelect<T extends boolean = true> {
+  phaseCode?: T;
+  name?: T;
+  project?: T;
+  phaseGroup?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projectPartial_select".
+ */
+export interface ProjectPartialSelect<T extends boolean = true> {
+  name?: T;
+  project?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projectService_select".
+ */
+export interface ProjectServiceSelect<T extends boolean = true> {
+  name?: T;
+  project?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projectFlag_select".
+ */
+export interface ProjectFlagSelect<T extends boolean = true> {
+  flagCode?: T;
+  name?: T;
+  color?: T;
+  project?: T;
+  timeBudget?: T;
+  linkedPartial?: T;
+  linkedService?: T;
   updatedAt?: T;
   createdAt?: T;
 }
