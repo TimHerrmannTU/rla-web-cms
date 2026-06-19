@@ -182,6 +182,14 @@ export const Employees: CollectionConfig = {
                   },
                 },
                 {
+                  name: 'color',
+                  type: 'text',
+                  admin: {
+                    placeholder: '#55AAFF',
+                    description: 'hex code only',
+                  },
+                },
+                {
                   name: 'entry',
                   label: 'Employment Start',
                   type: 'date',
@@ -216,6 +224,7 @@ export const Employees: CollectionConfig = {
                 },
               ],
             },
+            // soll history
             {
               name: 'sollHistory',
               type: 'array',
@@ -229,6 +238,14 @@ export const Employees: CollectionConfig = {
                       min: 0,
                       max: 168,
                       required: true,
+                    },
+                    {
+                      name: 'startingBalance',
+                      type: 'number',
+                      defaultValue: 0,
+                      admin: {
+                        description: 'Overtime/under-hours at the start of this period.',
+                      },
                     },
                     {
                       name: 'start',
@@ -343,6 +360,20 @@ export const Employees: CollectionConfig = {
                 {
                   name: 'description',
                   type: 'text',
+                },
+              ],
+            },
+            // vacation claim
+            {
+              name: 'vacationClaims',
+              type: 'array',
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'year', type: 'number', min: 2010, max: 2100, required: true },
+                    { name: 'days', type: 'number', required: true },
+                  ],
                 },
               ],
             },

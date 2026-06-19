@@ -170,6 +170,24 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -250,12 +268,20 @@ export interface Employee {
      * aka Kuerzel
      */
     slug?: string | null;
+    /**
+     * hex code only
+     */
+    color?: string | null;
     entry?: string | null;
     exit?: string | null;
     formerEmployee?: boolean | null;
     sollHistory?:
       | {
           targetHours: number;
+          /**
+           * Overtime/under-hours at the start of this period.
+           */
+          startingBalance?: number | null;
           start?: string | null;
           end?: string | null;
           distribution?: {
@@ -268,6 +294,13 @@ export interface Employee {
             so?: number | null;
           };
           description?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    vacationClaims?:
+      | {
+          year: number;
+          days: number;
           id?: string | null;
         }[]
       | null;
@@ -513,6 +546,30 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumbnail?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -558,6 +615,7 @@ export interface EmployeeSelect<T extends boolean = true> {
     | T
     | {
         slug?: T;
+        color?: T;
         entry?: T;
         exit?: T;
         formerEmployee?: T;
@@ -565,6 +623,7 @@ export interface EmployeeSelect<T extends boolean = true> {
           | T
           | {
               targetHours?: T;
+              startingBalance?: T;
               start?: T;
               end?: T;
               distribution?:
@@ -579,6 +638,13 @@ export interface EmployeeSelect<T extends boolean = true> {
                     so?: T;
                   };
               description?: T;
+              id?: T;
+            };
+        vacationClaims?:
+          | T
+          | {
+              year?: T;
+              days?: T;
               id?: T;
             };
       };
