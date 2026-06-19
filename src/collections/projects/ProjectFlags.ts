@@ -5,35 +5,32 @@ export const ProjectFlags: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     group: 'Projects',
-    defaultColumns: ['flagCode', 'name', 'project', 'timeBudget'],
+    defaultColumns: ['id', 'name', 'project', 'timeBudget'],
   },
   fields: [
+    {
+      name: 'id', // Overrides default PK to use your custom VARCHAR(50) ID
+      type: 'text',
+      required: true,
+      admin: {
+        description: 'Custom string ID for this flag (e.g., FLG-BUDGET-01)',
+      },
+    },
     {
       type: 'row',
       fields: [
         {
-          name: 'flagCode',
-          label: 'Flag ID / Code',
-          type: 'text',
-          required: true,
-          admin: {
-            width: '33%',
-          },
-        },
-        {
           name: 'name',
           type: 'text',
           required: true,
-          admin: {
-            width: '33%',
-          },
+          admin: { width: '50%' },
         },
         {
           name: 'color',
           type: 'text',
           admin: {
             placeholder: '#FFCC00',
-            width: '34%',
+            width: '50%',
           },
         },
       ],
@@ -46,19 +43,29 @@ export const ProjectFlags: CollectionConfig = {
           type: 'relationship',
           relationTo: 'project',
           required: true,
-          admin: {
-            width: '50%',
-          },
+          admin: { width: '50%' },
         },
         {
           name: 'timeBudget',
           label: 'Time Budget (Hours)',
           type: 'number',
-          admin: {
-            width: '50%',
-          },
+          admin: { width: '50%' },
         },
       ],
+    },
+    {
+      // Missing relationship from MySQL project_flags.phase
+      name: 'phase',
+      type: 'relationship',
+      relationTo: 'projectPhase',
+      filterOptions: ({ data }) => {
+        if (!data?.project) return true // Show all if no project is selected yet
+        return {
+          project: {
+            equals: data.project, // Only show phases belonging to this project
+          },
+        }
+      },
     },
     {
       type: 'row',
@@ -67,19 +74,26 @@ export const ProjectFlags: CollectionConfig = {
           name: 'linkedPartial',
           type: 'relationship',
           relationTo: 'projectPartial',
-          admin: {
-            width: '50%',
-            // Optional: Limit the dropdown selection to only partials belonging to the selected project
-            condition: (data) => Boolean(data?.project),
+          filterOptions: ({ data }) => {
+            if (!data?.project) return true
+            return {
+              project: {
+                equals: data.project, // Only show partials belonging to this project
+              },
+            }
           },
         },
         {
           name: 'linkedService',
           type: 'relationship',
           relationTo: 'projectService',
-          admin: {
-            width: '50%',
-            condition: (data) => Boolean(data?.project),
+          filterOptions: ({ data }) => {
+            if (!data?.project) return true
+            return {
+              project: {
+                equals: data.project, // Only show services belonging to this project
+              },
+            }
           },
         },
       ],

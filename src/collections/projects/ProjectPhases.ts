@@ -5,53 +5,35 @@ export const ProjectPhases: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     group: 'Projects',
-    defaultColumns: ['phaseCode', 'name', 'project'],
+    defaultColumns: ['id', 'name', 'project'],
   },
   fields: [
     {
-      type: 'row',
-      fields: [
-        {
-          name: 'phaseCode',
-          label: 'Phase ID / Code',
-          type: 'text',
-          required: true,
-          admin: {
-            width: '50%',
-          },
-        },
-        {
-          name: 'name',
-          type: 'text',
-          required: true,
-          admin: {
-            width: '50%',
-          },
-        },
-      ],
+      name: 'id', // Overrides default PK to use your custom VARCHAR(50) ID
+      type: 'text',
+      required: true,
+      admin: {
+        description: 'Custom string ID for this phase (e.g., PHS-EXECUTION)',
+      },
     },
     {
-      type: 'row',
-      fields: [
-        {
-          name: 'project',
-          type: 'relationship',
-          relationTo: 'project',
-          required: true,
-          admin: {
-            width: '50%',
-          },
-        },
-        {
-          name: 'phaseGroup',
-          label: 'Phase Grouping',
-          type: 'text',
-          admin: {
-            width: '50%',
-            placeholder: 'e.g., Conception, Design, Execution',
-          },
-        },
-      ],
+      name: 'name',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'project',
+      type: 'relationship',
+      relationTo: 'project',
+      required: true,
+    },
+    {
+      name: 'phaseGroup',
+      label: 'Phase Grouping',
+      type: 'text',
+      admin: {
+        placeholder: 'e.g., Conception, Design, Execution',
+      },
     },
   ],
 }

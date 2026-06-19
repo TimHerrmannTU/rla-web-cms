@@ -442,8 +442,10 @@ export interface Project {
  * via the `definition` "projectPhase".
  */
 export interface ProjectPhase {
-  id: number;
-  phaseCode: string;
+  /**
+   * Custom string ID for this phase (e.g., PHS-EXECUTION)
+   */
+  id: string;
   name: string;
   project: number | Project;
   phaseGroup?: string | null;
@@ -477,12 +479,15 @@ export interface ProjectService {
  * via the `definition` "projectFlag".
  */
 export interface ProjectFlag {
-  id: number;
-  flagCode: string;
+  /**
+   * Custom string ID for this flag (e.g., FLG-BUDGET-01)
+   */
+  id: string;
   name: string;
   color?: string | null;
   project: number | Project;
   timeBudget?: number | null;
+  phase?: (string | null) | ProjectPhase;
   linkedPartial?: (number | null) | ProjectPartial;
   linkedService?: (number | null) | ProjectService;
   updatedAt: string;
@@ -546,7 +551,7 @@ export interface PayloadLockedDocument {
       } | null)
     | ({
         relationTo: 'projectPhase';
-        value: number | ProjectPhase;
+        value: string | ProjectPhase;
       } | null)
     | ({
         relationTo: 'projectPartial';
@@ -558,7 +563,7 @@ export interface PayloadLockedDocument {
       } | null)
     | ({
         relationTo: 'projectFlag';
-        value: number | ProjectFlag;
+        value: string | ProjectFlag;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -833,7 +838,7 @@ export interface ProjectSelect<T extends boolean = true> {
  * via the `definition` "projectPhase_select".
  */
 export interface ProjectPhaseSelect<T extends boolean = true> {
-  phaseCode?: T;
+  id?: T;
   name?: T;
   project?: T;
   phaseGroup?: T;
@@ -865,11 +870,12 @@ export interface ProjectServiceSelect<T extends boolean = true> {
  * via the `definition` "projectFlag_select".
  */
 export interface ProjectFlagSelect<T extends boolean = true> {
-  flagCode?: T;
+  id?: T;
   name?: T;
   color?: T;
   project?: T;
   timeBudget?: T;
+  phase?: T;
   linkedPartial?: T;
   linkedService?: T;
   updatedAt?: T;
