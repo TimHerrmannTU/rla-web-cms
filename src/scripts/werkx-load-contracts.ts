@@ -11,7 +11,7 @@ async function run() {
   }
 
   const payload = await getPayload({ config })
-  const dataPath = path.resolve(process.cwd(), 'migration_data.json')
+  const dataPath = path.resolve(process.cwd(), 'migration/werkx_contracts.json')
 
   if (!fs.existsSync(dataPath)) {
     console.error(`Could not find migration data file at ${dataPath}.`)

@@ -12,6 +12,9 @@ export const ProjectServices: CollectionConfig = {
       name: 'id', // Overrides default PK to use your custom Integer ID
       type: 'number',
       required: true,
+      admin: {
+        readOnly: true, // Locks the field in the Admin UI, but programmatic imports still work
+      },
     },
     {
       name: 'name',

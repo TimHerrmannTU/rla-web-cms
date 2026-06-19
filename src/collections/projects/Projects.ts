@@ -12,6 +12,9 @@ export const Projects: CollectionConfig = {
       name: 'id', // Overrides default PK to use your custom String(50) ID
       type: 'text',
       required: true,
+      access: {
+        update: () => false, // Prevents editing the ID after the record has been created
+      },
     },
     {
       name: 'name',

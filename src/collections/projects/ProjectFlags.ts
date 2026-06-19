@@ -12,6 +12,9 @@ export const ProjectFlags: CollectionConfig = {
       name: 'id', // Custom String(50) ID
       type: 'text',
       required: true,
+      access: {
+        update: () => false,
+      },
     },
     {
       name: 'name',

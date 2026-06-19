@@ -12,6 +12,9 @@ export const ProjectPhases: CollectionConfig = {
       name: 'id', // Custom String(50) ID
       type: 'text',
       required: true,
+      access: {
+        update: () => false, // Prevents editing the ID after the record has been created
+      },
     },
     {
       name: 'name',

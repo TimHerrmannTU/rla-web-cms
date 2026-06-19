@@ -51,4 +51,3 @@ node_modules/
 
 # DB migration
 /migration
-migration_data.json
