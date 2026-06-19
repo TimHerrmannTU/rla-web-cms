@@ -212,6 +212,15 @@ export const Employees: CollectionConfig = {
                   },
                 },
                 {
+                  name: 'firstWorkYear',
+                  type: 'number',
+                  admin: { width: '150px' },
+                },
+                {
+                  name: 'startTrackingDate',
+                  type: 'date',
+                },
+                {
                   name: 'formerEmployee',
                   type: 'checkbox',
                   defaultValue: false,
@@ -273,7 +282,7 @@ export const Employees: CollectionConfig = {
                 {
                   name: 'distribution',
                   type: 'group',
-                  label: 'Daily Soll Distribution',
+                  label: 'Daily Soll Distribution (Weights)',
                   fields: [
                     {
                       type: 'row',
@@ -282,47 +291,41 @@ export const Employees: CollectionConfig = {
                           name: 'mo',
                           type: 'number',
                           min: 0,
-                          max: 24,
-                          defaultValue: 8,
+                          defaultValue: 1,
                           label: 'MO',
                         },
                         {
                           name: 'di',
                           type: 'number',
                           min: 0,
-                          max: 24,
-                          defaultValue: 8,
+                          defaultValue: 1,
                           label: 'DI',
                         },
                         {
                           name: 'mi',
                           type: 'number',
                           min: 0,
-                          max: 24,
-                          defaultValue: 8,
+                          defaultValue: 1,
                           label: 'MI',
                         },
                         {
                           name: 'do',
                           type: 'number',
                           min: 0,
-                          max: 24,
-                          defaultValue: 8,
+                          defaultValue: 1,
                           label: 'DO',
                         },
                         {
                           name: 'fr',
                           type: 'number',
                           min: 0,
-                          max: 24,
-                          defaultValue: 8,
+                          defaultValue: 1,
                           label: 'FR',
                         },
                         {
                           name: 'sa',
                           type: 'number',
                           min: 0,
-                          max: 24,
                           defaultValue: 0,
                           label: 'SA',
                         },
@@ -330,30 +333,26 @@ export const Employees: CollectionConfig = {
                           name: 'so',
                           type: 'number',
                           min: 0,
-                          max: 24,
                           defaultValue: 0,
                           label: 'SO',
                         },
                       ],
                     },
                   ],
-                  validate: (value: any, { siblingData }: any) => {
-                    const day_mo = Number(value?.mo || 0)
-                    const day_di = Number(value?.di || 0)
-                    const day_mi = Number(value?.mi || 0)
-                    const day_do = Number(value?.do || 0)
-                    const day_fr = Number(value?.fr || 0)
-                    const day_sa = Number(value?.sa || 0)
-                    const day_so = Number(value?.so || 0)
+                  // We can add a simple validator to ensure they don't enter 0 for every single day
+                  validate: (value: any) => {
+                    const sum =
+                      Number(value?.mo || 0) +
+                      Number(value?.di || 0) +
+                      Number(value?.mi || 0) +
+                      Number(value?.do || 0) +
+                      Number(value?.fr || 0) +
+                      Number(value?.sa || 0) +
+                      Number(value?.so || 0)
 
-                    const sum = day_mo + day_di + day_mi + day_do + day_fr + day_sa + day_so
-
-                    const target = Number(siblingData?.targetHours || 0)
-
-                    if (sum !== target) {
-                      return `The sum of daily hours (${sum}h) must exactly match the Target Hours (${target}h). Please adjust.`
+                    if (sum <= 0) {
+                      return 'The total sum of weights must be greater than 0.'
                     }
-
                     return true
                   },
                 },

@@ -284,6 +284,8 @@ export interface Employee {
     color?: string | null;
     entry?: string | null;
     exit?: string | null;
+    firstWorkYear?: number | null;
+    startTrackingDate?: string | null;
     formerEmployee?: boolean | null;
     sollHistory?:
       | {
@@ -718,6 +720,8 @@ export interface EmployeeSelect<T extends boolean = true> {
         color?: T;
         entry?: T;
         exit?: T;
+        firstWorkYear?: T;
+        startTrackingDate?: T;
         formerEmployee?: T;
         sollHistory?:
           | T
