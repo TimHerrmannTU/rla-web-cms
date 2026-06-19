@@ -447,6 +447,20 @@ export interface Project {
    */
   color?: string | null;
   active?: boolean | null;
+  adress?: {
+    /**
+     * @minItems 2
+     * @maxItems 2
+     */
+    coords?: [number, number] | null;
+    details?: {
+      country?: string | null;
+      city?: string | null;
+      zip?: string | null;
+      street?: string | null;
+      more?: string | null;
+    };
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -848,6 +862,20 @@ export interface ProjectSelect<T extends boolean = true> {
   surfaceArea?: T;
   color?: T;
   active?: T;
+  adress?:
+    | T
+    | {
+        coords?: T;
+        details?:
+          | T
+          | {
+              country?: T;
+              city?: T;
+              zip?: T;
+              street?: T;
+              more?: T;
+            };
+      };
   updatedAt?: T;
   createdAt?: T;
 }

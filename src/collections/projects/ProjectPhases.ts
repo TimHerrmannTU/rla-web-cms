@@ -9,7 +9,7 @@ export const ProjectPhases: CollectionConfig = {
   },
   fields: [
     {
-      name: 'id', // Custom String(50) ID
+      name: 'id',
       type: 'text',
       required: true,
       access: {

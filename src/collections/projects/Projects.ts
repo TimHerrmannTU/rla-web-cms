@@ -102,6 +102,10 @@ export const Projects: CollectionConfig = {
             },
           ],
         },
+        {
+          label: 'Location',
+          fields: [locationField],
+        },
       ],
     },
   ],
