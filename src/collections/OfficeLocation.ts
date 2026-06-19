@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { lexicalEditor, FixedToolbarFeature } from '@payloadcms/richtext-lexical'
+import { locationField } from '../fields/location' // Import the reusable field
 
 export const OfficeLocations: CollectionConfig = {
   slug: 'officeLocation',
@@ -38,64 +39,7 @@ export const OfficeLocations: CollectionConfig = {
         // location
         {
           label: 'Location',
-          fields: [
-            {
-              type: 'group',
-              name: 'adress',
-              fields: [
-                {
-                  type: 'row',
-                  fields: [
-                    {
-                      name: 'coords',
-                      type: 'point',
-                      label: 'Location',
-                      admin: {
-                        components: {
-                          Field: '@/components/cms/MapFieldLoader', // Path to your component
-                        },
-                      },
-                    },
-                    {
-                      name: 'details',
-                      type: 'group',
-                      label: false,
-                      fields: [
-                        {
-                          name: 'country',
-                          type: 'text',
-                        },
-                        {
-                          name: 'city',
-                          type: 'text',
-                        },
-                        {
-                          name: 'zip',
-                          type: 'text',
-                        },
-                        {
-                          name: 'street',
-                          type: 'text',
-                        },
-                        {
-                          name: 'more',
-                          type: 'text',
-                        },
-                      ],
-                      admin: {
-                        style: {
-                          flex: '0 0 500px',
-                          border: 'none',
-                          padding: '0',
-                          background: 'transparent',
-                        },
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
+          fields: [locationField],
         },
         // contact
         {

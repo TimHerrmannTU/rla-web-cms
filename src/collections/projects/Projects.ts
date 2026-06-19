@@ -6,6 +6,7 @@ export const Projects: CollectionConfig = {
     useAsTitle: 'name',
     group: 'Projects',
     defaultColumns: ['id', 'name', 'color', 'active'],
+    listSearchableFields: ['name', 'id'],
   },
   fields: [
     {
@@ -28,11 +29,14 @@ export const Projects: CollectionConfig = {
           name: 'color',
           type: 'text',
         },
-        {
-          name: 'creationDate',
-          type: 'date',
-        },
       ],
+    },
+    {
+      name: 'creationDate',
+      type: 'date',
+      admin: {
+        hidden: true,
+      },
     },
     {
       name: 'active',
