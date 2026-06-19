@@ -9,12 +9,9 @@ export const ProjectPhases: CollectionConfig = {
   },
   fields: [
     {
-      name: 'id', // Overrides default PK to use your custom VARCHAR(50) ID
+      name: 'id', // Custom String(50) ID
       type: 'text',
       required: true,
-      admin: {
-        description: 'Custom string ID for this phase (e.g., PHS-EXECUTION)',
-      },
     },
     {
       name: 'name',
@@ -22,18 +19,14 @@ export const ProjectPhases: CollectionConfig = {
       required: true,
     },
     {
+      name: 'phase', // Matches phase column exactly (String(50))
+      type: 'text',
+    },
+    {
       name: 'project',
       type: 'relationship',
       relationTo: 'project',
       required: true,
-    },
-    {
-      name: 'phaseGroup',
-      label: 'Phase Grouping',
-      type: 'text',
-      admin: {
-        placeholder: 'e.g., Conception, Design, Execution',
-      },
     },
   ],
 }

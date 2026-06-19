@@ -430,12 +430,11 @@ export interface MineFeature {
  * via the `definition` "project".
  */
 export interface Project {
-  id: number;
-  projectId: string;
+  id: string;
   name: string;
   color?: string | null;
-  creationDate?: string | null;
   active?: boolean | null;
+  creationDate?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -444,13 +443,10 @@ export interface Project {
  * via the `definition` "projectPhase".
  */
 export interface ProjectPhase {
-  /**
-   * Custom string ID for this phase (e.g., PHS-EXECUTION)
-   */
   id: string;
   name: string;
-  project: number | Project;
-  phaseGroup?: string | null;
+  phase?: string | null;
+  project: string | Project;
   updatedAt: string;
   createdAt: string;
 }
@@ -461,7 +457,7 @@ export interface ProjectPhase {
 export interface ProjectPartial {
   id: number;
   name: string;
-  project: number | Project;
+  project: string | Project;
   updatedAt: string;
   createdAt: string;
 }
@@ -472,7 +468,7 @@ export interface ProjectPartial {
 export interface ProjectService {
   id: number;
   name: string;
-  project: number | Project;
+  project: string | Project;
   updatedAt: string;
   createdAt: string;
 }
@@ -481,15 +477,12 @@ export interface ProjectService {
  * via the `definition` "projectFlag".
  */
 export interface ProjectFlag {
-  /**
-   * Custom string ID for this flag (e.g., FLG-BUDGET-01)
-   */
   id: string;
   name: string;
   color?: string | null;
-  project: number | Project;
   timeBudget?: number | null;
-  phase?: (string | null) | ProjectPhase;
+  project: string | Project;
+  phase?: string | null;
   linkedPartial?: (number | null) | ProjectPartial;
   linkedService?: (number | null) | ProjectService;
   updatedAt: string;
@@ -549,7 +542,7 @@ export interface PayloadLockedDocument {
       } | null)
     | ({
         relationTo: 'project';
-        value: number | Project;
+        value: string | Project;
       } | null)
     | ({
         relationTo: 'projectPhase';
@@ -829,11 +822,11 @@ export interface MineFeaturesSelect<T extends boolean = true> {
  * via the `definition` "project_select".
  */
 export interface ProjectSelect<T extends boolean = true> {
-  projectId?: T;
+  id?: T;
   name?: T;
   color?: T;
-  creationDate?: T;
   active?: T;
+  creationDate?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -844,8 +837,8 @@ export interface ProjectSelect<T extends boolean = true> {
 export interface ProjectPhaseSelect<T extends boolean = true> {
   id?: T;
   name?: T;
+  phase?: T;
   project?: T;
-  phaseGroup?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -854,6 +847,7 @@ export interface ProjectPhaseSelect<T extends boolean = true> {
  * via the `definition` "projectPartial_select".
  */
 export interface ProjectPartialSelect<T extends boolean = true> {
+  id?: T;
   name?: T;
   project?: T;
   updatedAt?: T;
@@ -864,6 +858,7 @@ export interface ProjectPartialSelect<T extends boolean = true> {
  * via the `definition` "projectService_select".
  */
 export interface ProjectServiceSelect<T extends boolean = true> {
+  id?: T;
   name?: T;
   project?: T;
   updatedAt?: T;
@@ -877,8 +872,8 @@ export interface ProjectFlagSelect<T extends boolean = true> {
   id?: T;
   name?: T;
   color?: T;
-  project?: T;
   timeBudget?: T;
+  project?: T;
   phase?: T;
   linkedPartial?: T;
   linkedService?: T;

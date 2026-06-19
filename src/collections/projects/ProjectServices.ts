@@ -5,26 +5,24 @@ export const ProjectServices: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     group: 'Projects',
-    defaultColumns: ['name', 'project'],
+    defaultColumns: ['id', 'name', 'project'],
   },
   fields: [
     {
-      type: 'row',
-      fields: [
-        {
-          name: 'name',
-          type: 'text',
-          required: true,
-          admin: { width: '50%' },
-        },
-        {
-          name: 'project',
-          type: 'relationship',
-          relationTo: 'project',
-          required: true,
-          admin: { width: '50%' },
-        },
-      ],
+      name: 'id', // Overrides default PK to use your custom Integer ID
+      type: 'number',
+      required: true,
+    },
+    {
+      name: 'name',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'project',
+      type: 'relationship',
+      relationTo: 'project',
+      required: true,
     },
   ],
 }
