@@ -17,15 +17,20 @@ export const ProjectPartials: CollectionConfig = {
       },
     },
     {
-      name: 'name',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'project',
-      type: 'relationship',
-      relationTo: 'project',
-      required: true,
+      type: 'row',
+      fields: [
+        {
+          name: 'name',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'project',
+          type: 'relationship',
+          relationTo: 'project',
+          required: true,
+        },
+      ],
     },
   ],
 }

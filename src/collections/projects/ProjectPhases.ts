@@ -13,23 +13,28 @@ export const ProjectPhases: CollectionConfig = {
       type: 'text',
       required: true,
       access: {
-        update: () => false, // Prevents editing the ID after the record has been created
+        update: () => false,
       },
     },
     {
-      name: 'name',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'phase', // Matches phase column exactly (String(50))
-      type: 'text',
-    },
-    {
-      name: 'project',
-      type: 'relationship',
-      relationTo: 'project',
-      required: true,
+      type: 'row',
+      fields: [
+        {
+          name: 'project',
+          type: 'relationship',
+          relationTo: 'project',
+          required: true,
+        },
+        {
+          name: 'phase',
+          type: 'text',
+        },
+        {
+          name: 'name',
+          type: 'text',
+          required: true,
+        },
+      ],
     },
   ],
 }

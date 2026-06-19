@@ -9,30 +9,35 @@ export const Projects: CollectionConfig = {
   },
   fields: [
     {
-      name: 'id', // Overrides default PK to use your custom String(50) ID
+      name: 'id',
       type: 'text',
       required: true,
       access: {
-        update: () => false, // Prevents editing the ID after the record has been created
+        update: () => false,
       },
     },
     {
-      name: 'name',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'color',
-      type: 'text',
+      type: 'row',
+      fields: [
+        {
+          name: 'name',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'color',
+          type: 'text',
+        },
+        {
+          name: 'creationDate',
+          type: 'date',
+        },
+      ],
     },
     {
       name: 'active',
       type: 'checkbox',
       defaultValue: true,
-    },
-    {
-      name: 'creationDate',
-      type: 'date',
     },
   ],
 }

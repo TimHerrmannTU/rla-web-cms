@@ -17,53 +17,86 @@ export const ProjectFlags: CollectionConfig = {
       },
     },
     {
-      name: 'name',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'color',
-      type: 'text',
-    },
-    {
-      name: 'timeBudget',
-      type: 'number',
-    },
-    {
-      name: 'project',
-      type: 'relationship',
-      relationTo: 'project',
-      required: true,
-    },
-    {
-      name: 'phase',
-      type: 'text',
-    },
-    {
-      name: 'linkedPartial',
-      type: 'relationship',
-      relationTo: 'projectPartial',
-      filterOptions: ({ data }) => {
-        if (!data?.project) return true
-        return {
-          project: {
-            equals: data.project,
+      type: 'row',
+      fields: [
+        {
+          name: 'name',
+          type: 'text',
+          required: true,
+          admin: {
+            width: '25%',
           },
-        }
-      },
+        },
+        {
+          name: 'timeBudget',
+          type: 'number',
+          admin: {
+            width: '25%',
+            description: 'in hours',
+          },
+        },
+        {
+          name: 'color',
+          type: 'text',
+          admin: {
+            width: '25%',
+            description: 'hex code only',
+          },
+        },
+      ],
     },
     {
-      name: 'linkedService',
-      type: 'relationship',
-      relationTo: 'projectService',
-      filterOptions: ({ data }) => {
-        if (!data?.project) return true
-        return {
-          project: {
-            equals: data.project,
+      type: 'row',
+      fields: [
+        {
+          name: 'project',
+          type: 'relationship',
+          relationTo: 'project',
+          required: true,
+          admin: {
+            width: '25%',
           },
-        }
-      },
+        },
+        {
+          name: 'phase',
+          type: 'text',
+          admin: {
+            width: '25%',
+          },
+        },
+        {
+          name: 'linkedPartial',
+          type: 'relationship',
+          relationTo: 'projectPartial',
+          filterOptions: ({ data }) => {
+            if (!data?.project) return true
+            return {
+              project: {
+                equals: data.project,
+              },
+            }
+          },
+          admin: {
+            width: '25%',
+          },
+        },
+        {
+          name: 'linkedService',
+          type: 'relationship',
+          relationTo: 'projectService',
+          filterOptions: ({ data }) => {
+            if (!data?.project) return true
+            return {
+              project: {
+                equals: data.project,
+              },
+            }
+          },
+          admin: {
+            width: '25%',
+          },
+        },
+      ],
     },
   ],
 }

@@ -433,8 +433,8 @@ export interface Project {
   id: string;
   name: string;
   color?: string | null;
-  active?: boolean | null;
   creationDate?: string | null;
+  active?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -444,9 +444,9 @@ export interface Project {
  */
 export interface ProjectPhase {
   id: string;
-  name: string;
-  phase?: string | null;
   project: string | Project;
+  phase?: string | null;
+  name: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -479,8 +479,14 @@ export interface ProjectService {
 export interface ProjectFlag {
   id: string;
   name: string;
-  color?: string | null;
+  /**
+   * in hours
+   */
   timeBudget?: number | null;
+  /**
+   * hex code only
+   */
+  color?: string | null;
   project: string | Project;
   phase?: string | null;
   linkedPartial?: (number | null) | ProjectPartial;
@@ -825,8 +831,8 @@ export interface ProjectSelect<T extends boolean = true> {
   id?: T;
   name?: T;
   color?: T;
-  active?: T;
   creationDate?: T;
+  active?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -836,9 +842,9 @@ export interface ProjectSelect<T extends boolean = true> {
  */
 export interface ProjectPhaseSelect<T extends boolean = true> {
   id?: T;
-  name?: T;
-  phase?: T;
   project?: T;
+  phase?: T;
+  name?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -871,8 +877,8 @@ export interface ProjectServiceSelect<T extends boolean = true> {
 export interface ProjectFlagSelect<T extends boolean = true> {
   id?: T;
   name?: T;
-  color?: T;
   timeBudget?: T;
+  color?: T;
   project?: T;
   phase?: T;
   linkedPartial?: T;
