@@ -96,9 +96,31 @@ export const Projects: CollectionConfig = {
               ],
             },
             {
-              name: 'active',
-              type: 'checkbox',
-              defaultValue: true,
+              type: 'group',
+              name: 'active_in',
+              label: 'Display in/on...',
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'intranet',
+                      type: 'checkbox',
+                      defaultValue: true,
+                    },
+                    {
+                      name: 'werkx',
+                      type: 'checkbox',
+                      defaultValue: true,
+                    },
+                    {
+                      name: 'web',
+                      type: 'checkbox',
+                      defaultValue: false,
+                    },
+                  ],
+                },
+              ],
             },
           ],
         },

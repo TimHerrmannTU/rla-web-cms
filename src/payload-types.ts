@@ -446,7 +446,11 @@ export interface Project {
    * hex code only
    */
   color?: string | null;
-  active?: boolean | null;
+  active_in?: {
+    intranet?: boolean | null;
+    werkx?: boolean | null;
+    web?: boolean | null;
+  };
   adress?: {
     /**
      * @minItems 2
@@ -861,7 +865,13 @@ export interface ProjectSelect<T extends boolean = true> {
   yearCompletion?: T;
   surfaceArea?: T;
   color?: T;
-  active?: T;
+  active_in?:
+    | T
+    | {
+        intranet?: T;
+        werkx?: T;
+        web?: T;
+      };
   adress?:
     | T
     | {
