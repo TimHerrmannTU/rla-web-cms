@@ -364,7 +364,15 @@ export const Employees: CollectionConfig = {
                 {
                   type: 'row',
                   fields: [
-                    { name: 'year', type: 'number', min: 2010, max: 2100, required: true },
+                    {
+                      name: 'year',
+                      type: 'number',
+                      min: 2010,
+                      max: 2100,
+                      admin: {
+                        description: 'Leave blank for a claim that applies indefinitely (a fallback, not tied to one year).',
+                      },
+                    },
                     { name: 'days', type: 'number', required: true },
                   ],
                 },

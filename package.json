@@ -15,7 +15,14 @@
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "test": "pnpm run test:int && pnpm run test:e2e",
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts",
-    "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts"
+    "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
+    "etl:employees": "tsx src/scripts/employee/run.ts",
+    "etl:employees:extract-wp": "tsx src/scripts/employee/extract-wp.ts",
+    "etl:employees:extract-sql": "tsx src/scripts/employee/extract-sql.ts",
+    "etl:werkx:projects": "tsx src/scripts/werkx/load-projects.ts",
+    "etl:werkx:contracts": "tsx src/scripts/werkx/load-contracts.ts",
+    "etl:news": "tsx src/scripts/news/run.ts",
+    "etl:news:extract": "tsx src/scripts/news/extract.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.85.0",
@@ -27,6 +34,7 @@
     "cross-env": "^7.0.3",
     "dotenv": "16.4.7",
     "graphql": "^16.8.1",
+    "jsdom": "28.0.0",
     "leaflet": "^1.9.4",
     "mysql2": "^3.22.5",
     "next": "16.2.6",
@@ -41,13 +49,13 @@
   "devDependencies": {
     "@playwright/test": "1.58.2",
     "@testing-library/react": "16.3.0",
+    "@types/jsdom": "^30.0.0",
     "@types/node": "22.19.9",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "4.5.2",
     "eslint": "^9.16.0",
     "eslint-config-next": "16.2.6",
-    "jsdom": "28.0.0",
     "prettier": "^3.4.2",
     "tsx": "^4.21.0",
     "typescript": "5.7.3",

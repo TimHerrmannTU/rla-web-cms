@@ -76,24 +76,42 @@ Fields intentionally shared across collections: `src/fields/color.ts` (hex text 
 Employee/Project/ProjectFlags — mirrors legacy `farben` table), `src/fields/location.ts` (point +
 address group with the map field, used by OfficeLocation/Projects).
 
-## ETL pipeline (`src/scripts/`, driven by `migrate.ts`)
+## ETL pipeline (`src/scripts/`)
 
-Modular pipeline, run in sequence by `migrate.ts`: `wipeEmployees` → `processWp` → `hydrateJson` →
-`loadToPayload`. Separate one-off extractors (`extract-wp.ts`, `extract-sql.ts`) populate
-`migration/*.json` from live sources before the pipeline runs:
+One folder per source, all built on shared `src/scripts/lib/` utilities (Payload client,
+migration JSON read/write, a generic WordPress REST paginator, date parsing, a generic
+upsert-by-query helper, office-relationship resolution, HTML→lexical conversion, remote-image→
+Media creation). Run via `pnpm etl:*` scripts (see `package.json`) rather than invoking `tsx`
+directly. Each source follows the same shape: `extract-*.ts` (standalone, network/DB → verbatim
+`migration/<source>_raw.json`, run manually since it needs network access not every machine has)
+→ `transform.ts` (pure, `*_raw.json` → `*_processed.json`) → optional `hydrate.ts` (enrich from a
+second source) → `load.ts` (writes to Payload, takes the shared `payload` client as a param) →
+optional `wipe.ts` → `run.ts` (orchestrates transform→[hydrate]→load; never calls `extract-*`).
 
-- `extract-wp.ts` — paginates the WordPress REST API (`.../wp-json/wp/v2/mitarbeiter`) → `wp_raw.json`.
-- `extract-sql.ts` — pulls the legacy `mitarbeiter` table from a MySQL DB (`LEGACY_DB_*` env vars) → `sql1_raw.json`.
-- `process-wp.ts` → `wp_processed.json`, `hydrate-json.ts` → merges/enriches, `load-to-payload.ts` → writes into Payload via the local API.
-- `migration/*.json` are real extracted snapshots (not fixtures) — e.g. `wp_processed.json` carries
-  `_migrationMetadata.legacyWpId`/`legacyKuerzel`/`legacyStandort` per employee for traceability
-  back to the WordPress post and legacy `standort` (office) code.
-- `werkx-load-projects.ts` / `werkx-load-contracts.ts` load `migration/werkx_projects.json` /
-  `werkx_contracts.json` — project records keyed by legacy short code, each carrying `color` and
-  `creationDate`, straight from the legacy `projektgruppen`/`farben` tables.
+- **`employee/`** — `pnpm etl:employees`. `extract-wp.ts` (`WP_BASE_URL` + `mitarbeiter` CPT) and
+  `extract-sql.ts` (legacy `mitarbeiter` MySQL table, `LEGACY_DB_*`) populate `wp_raw.json`/
+  `sql1_raw.json`. `run.ts` wipes all employees, then `transform.ts` → `wp_processed.json`,
+  `hydrate.ts` enriches with the SQL data → `wp_hydrated.json`, `load.ts` upserts into `employee`.
+  `migration/*.json` are real extracted snapshots (not fixtures, gitignored) — e.g.
+  `wp_processed.json` carries `_migrationMetadata.legacyWpId`/`legacyKuerzel`/`legacyStandort` per
+  employee for traceability, though that key isn't a real `Employee.ts` field so Payload silently
+  drops it on write (pre-existing, not fixed).
+- **`werkx/`** — `load-projects.ts` (`pnpm etl:werkx:projects`) and `load-contracts.ts`
+  (`pnpm etl:werkx:contracts`) load `migration/werkx_projects.json` / `werkx_contracts.json` —
+  project records keyed by legacy short code (`color`/`creationDate` from `projektgruppen`/
+  `farben`) and per-employee WerkX contract data, respectively. Both are standalone (no shared
+  `extract-*`/`run.ts` — the source JSON is produced by `rla-werkx-api`'s own ETL, not this repo's).
+- **`news/`** — `pnpm etl:news`. Sourced **only** from the WordPress `news` CPT (`WP_BASE_URL` +
+  `/news`) — never the `1_php_tim` sibling repo's `web` MySQL `aktuell` table. `extract.ts` →
+  `news_raw.json`, `transform.ts` maps WP's ACF `bilder` (image gallery — only the first entry is
+  used, News has just one `thumbnail` field today) and `externe_links` (→ `News.externalLinks`) →
+  `news_processed.json`, `load.ts` resolves the thumbnail via WP's media endpoint, converts
+  `content.rendered` HTML to lexical (`@payloadcms/richtext-lexical`'s `convertHTMLToLexical`),
+  and upserts by the `News.wpId` field (added specifically for idempotent re-imports). No wipe
+  step — re-running re-syncs WP-owned fields in place rather than wipe-and-reload.
 
-Env vars: `DATABASE_URL` (Postgres, despite `.env.example` calling it a Mongo URL — that file is
-stale from the starter template), `PAYLOAD_SECRET`, `LEGACY_DB_HOST/USER/PASSWORD/NAME`.
+Env vars: `DATABASE_URL` (Postgres), `PAYLOAD_SECRET`, `WP_BASE_URL` (e.g.
+`http://webserver/intranet/wp-json/wp/v2`), `LEGACY_DB_HOST/USER/PASSWORD/NAME`.
 
 ## The systems being consolidated
 

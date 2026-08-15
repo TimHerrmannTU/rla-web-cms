@@ -205,6 +205,10 @@ export interface Media {
  */
 export interface News {
   id: number;
+  /**
+   * WordPress news post ID — used by the News ETL for idempotent re-imports.
+   */
+  wpId?: number | null;
   name?: string | null;
   thumbnail?: (number | null) | Media;
   content?: {
@@ -311,7 +315,10 @@ export interface Employee {
       | null;
     vacationClaims?:
       | {
-          year: number;
+          /**
+           * Leave blank for a claim that applies indefinitely (a fallback, not tied to one year).
+           */
+          year?: number | null;
           days: number;
           id?: string | null;
         }[]
@@ -707,6 +714,7 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "news_select".
  */
 export interface NewsSelect<T extends boolean = true> {
+  wpId?: T;
   name?: T;
   thumbnail?: T;
   content?: T;

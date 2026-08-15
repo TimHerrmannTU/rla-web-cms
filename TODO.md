@@ -49,12 +49,15 @@ duplicate the work.
 
 ### 5. #1 feat: create news post type
 **Correction: this already exists**, not a from-scratch build. `src/collections/News.ts` is fully
-implemented (bilingual name/content, thumbnail, external links array) and registered in
-`payload.config.ts`. Real remaining scope: wire an ETL source (WordPress `news` CPT is one
-candidate, the public site's `aktuell` table — via `getNews()` in `1_php_tim/utils/global/db.php`
-— is another and looks like the more direct legacy source given `models/news.php` already models
-`index`/`name`/`content`/`datum`/`links`/`bild` closely matching the Payload fields) and resolve
-the code's own `// TODO add relationship to project`.
+implemented (bilingual name/content, thumbnail, external links array, plus a `wpId` field added
+for idempotent ETL re-imports) and registered in `payload.config.ts`. **Done**: ETL now wired
+(`src/scripts/news/`, `pnpm etl:news`), sourced from the WordPress `news` CPT — explicitly *not*
+the public site's `aktuell` table (superseding this item's earlier "looks like the more direct
+legacy source" suggestion; the owner was explicit WordPress is the only source here). Real
+ACF shape on `news`: `acf.bilder` (image gallery, only first image used — News has one
+`thumbnail` field), `acf.externe_links` (→ `News.externalLinks`), `acf.interner_link` (WP post ID
+into the `projekt` CPT — future source for the still-open `// TODO add relationship to project`,
+once both that field and a Projects WP ETL exist; out of scope for now).
 
 ### 6. #5 feat: add themes / themen post type
 **Confirmed real and distinct — but flag a possible duplicate.** Legacy `themen` table confirmed

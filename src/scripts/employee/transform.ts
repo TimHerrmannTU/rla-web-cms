@@ -1,5 +1,6 @@
-// scripts/process-wp.ts
-import fs from 'fs'
+import { readMigrationJson, writeMigrationJson } from '../lib/migration-store'
+import { parseIsoLikeDate } from '../lib/dates'
+import { resolveOfficeIdFromWpCategories } from '../lib/office-resolution'
 
 interface RawWpRecord {
   id: number
@@ -18,18 +19,12 @@ interface RawWpRecord {
   }
 }
 
-export async function processWp() {
-  const rawPath = './migration/wp_raw.json'
-  const processedPath = './migration/wp_processed.json'
-
-  if (!fs.existsSync(rawPath)) {
-    throw new Error(`Raw WordPress file not found at ${rawPath}`)
-  }
-
-  const rawData: RawWpRecord[] = JSON.parse(fs.readFileSync(rawPath, 'utf-8'))
+/** WP `mitarbeiter` raw JSON -> Payload Employee shape (migration/wp_raw.json -> wp_processed.json). */
+export async function transformWpEmployees(): Promise<void> {
+  const rawData = readMigrationJson<RawWpRecord[]>('wp_raw.json')
   console.log(`Processing ${rawData.length} raw WordPress records...`)
 
-  const processedRecords: any[] = []
+  const processedRecords: Record<string, unknown>[] = []
 
   for (const raw of rawData) {
     const acf = raw.acf
@@ -50,22 +45,8 @@ export async function processWp() {
     if (!first && !last) continue
 
     const email = acf.email?.toLowerCase().trim() || null
-
-    let birthday: string | null = null
-    if (acf.birthday) {
-      const parsedDate = new Date(acf.birthday)
-      if (!isNaN(parsedDate.getTime())) {
-        birthday = parsedDate.toISOString()
-      }
-    }
-
-    let officeId: string | null = null
-    const wpCategories = raw.categories || []
-    if (wpCategories.includes(626)) officeId = '2'
-    else if (wpCategories.includes(625)) officeId = '1'
-    else if (wpCategories.includes(629)) officeId = '5'
-    else if (wpCategories.includes(628)) officeId = '4'
-    else if (wpCategories.includes(627)) officeId = '3'
+    const birthday = parseIsoLikeDate(acf.birthday)
+    const officeId = resolveOfficeIdFromWpCategories(raw.categories || [])
 
     let formerEmployee: boolean | null = null
     let exitDate: string | null = null
@@ -73,17 +54,19 @@ export async function processWp() {
     if (acf.retired !== undefined && acf.retired !== null) {
       formerEmployee = Boolean(acf.retired)
       if (formerEmployee) {
-        exitDate = new Date().toISOString() // Fallback to satisfy hook [1.2.1]
+        // Fallback so Employee.ts's `werkx.formerEmployee` beforeChange hook (which derives the
+        // value from whether `exit` is set) agrees with the value we've already computed here.
+        exitDate = new Date().toISOString()
       }
     }
 
-    const payloadEmployee = {
+    processedRecords.push({
       firstName: first || null,
       lastName: last || null,
-      birthday: birthday,
+      birthday,
       office: officeId,
 
-      email: email,
+      email,
       phone: acf.telefon?.trim() || null,
       mobilePhone: acf['mobil-telefon']?.trim() || null,
 
@@ -93,6 +76,8 @@ export async function processWp() {
         location: null,
       },
 
+      // Not a real Employee.ts field — Payload silently drops this on create/update. Kept as-is
+      // for traceability in the intermediate JSON; not authorized to fix in this pass.
       _migrationMetadata: {
         legacyWpId: raw.id,
         wpTeam: acf.team || null,
@@ -101,14 +86,12 @@ export async function processWp() {
       werkx: {
         entry: null,
         exit: exitDate,
-        formerEmployee: formerEmployee,
+        formerEmployee,
         sollHistory: [],
       },
-    }
-
-    processedRecords.push(payloadEmployee)
+    })
   }
 
-  fs.writeFileSync(processedPath, JSON.stringify(processedRecords, null, 2))
-  console.log(`WordPress processing complete. Saved to: ${processedPath}`)
+  writeMigrationJson('wp_processed.json', processedRecords)
+  console.log(`WordPress processing complete. ${processedRecords.length} records.`)
 }

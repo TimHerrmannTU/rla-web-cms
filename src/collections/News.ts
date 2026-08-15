@@ -8,6 +8,15 @@ export const News: CollectionConfig = {
   },
   fields: [
     {
+      name: 'wpId',
+      type: 'number',
+      unique: true,
+      admin: {
+        hidden: true,
+        description: 'WordPress news post ID — used by the News ETL for idempotent re-imports.',
+      },
+    },
+    {
       name: 'name',
       type: 'text',
       localized: true,
