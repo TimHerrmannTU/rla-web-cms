@@ -68,23 +68,27 @@ and modeling it twice would work against the whole point of consolidating. Depen
 field, since `themen.php` itself renders as a Flow of its own).
 
 ### 7. #3 feat: add awards / auszeichnungen post type
-**Confirmed accurate.** Legacy table `auszeichnungen`, model already reverse-engineered in
-`1_php_tim/models/award.php`: `name`, `inhalt` (content), `auslober` (issuer), `links`, `bild`,
-`jahr` (sort key). Independent of everything else — safe to do any time, ordered here mainly
-because it's simple.
+**Collection built** (`src/collections/Awards.ts`, slug `award`, registered in `payload.config.ts`):
+`name`, `year`, `thumbnail`, `issuer`, `content`, `links` — matches `1_php_tim/models/award.php`'s
+`name`/`jahr`/`bild`/`auslober`/`inhalt`/`links` closely. **Remaining work**: no ETL yet — no
+`src/scripts/awards/` folder, no `migration/auszeichnungen_*.json`. Follow the `news/` ETL as the
+template (same `extract → transform → load → run` shape); legacy source is the `auszeichnungen`
+MySQL table per the original issue.
 
 ### 8. #4 feat: add publications / publikationen post type
-**Confirmed accurate.** Legacy `publikationen` + `publikationskategorien` taxonomy, model in
-`1_php_tim/models/publication.php`: `name`/`buch`, `untertitel`, `zeitschrift`, `autor`, `hrsg`
-(editor), `verlag` (publisher), `jahr`, `seiten`, `bild`, `datei` (PDF link), `projekte`
-(relationship, pipe-delimited legacy side), `url`. Slightly more work than Awards because of the
-taxonomy + project relationship.
+**Collection built** (`src/collections/Publications.ts` + `src/collections/PublicationCategories.ts`,
+slug `publication`, both registered): `name`, `subtitle`, `category`, `year`, `thumbnail`,
+`journal`, `publisher`, `author`, `editor`, `pages`, `file`, `url`, `projects` — matches
+`1_php_tim/models/publication.php`'s fields closely, taxonomy split into its own collection.
+**Remaining work**: no ETL yet — no `src/scripts/publications/` folder, no
+`migration/publikationen_*.json`. Slightly more involved than Awards' ETL because of the
+category relationship + `projects` (pipe-delimited on the legacy side, needs splitting).
 
 ### 9. #6 feat: add jobs / stellen post type
-**Confirmed accurate, and the simplest item on this list.** Legacy `jobs` table, consumed by
-`karriere.php` — just localized `name`/`inhalt`, ordered by `datum`. No relationships, no media.
-Good quick win, but sequenced last in this phase since it's fully independent and low-value to
-front-load.
+**Collection built** (`src/collections/Jobs.ts`, slug `job`, registered): `name`, `date`, `content` —
+matches the minimal legacy `jobs` table shape (`karriere.php`: localized `name`/`inhalt`, ordered by
+`datum`). **Remaining work**: no ETL yet — the simplest of the three remaining ETLs (no
+relationships, no media), good next quick win once Awards/Publications' ETL pattern is proven.
 
 ## Phase 3 — Cross-cutting platform decisions (need real content to reason about first)
 
