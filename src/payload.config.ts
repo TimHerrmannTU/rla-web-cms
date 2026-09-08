@@ -13,6 +13,7 @@ import { Awards } from './collections/Awards'
 import { Publications } from './collections/Publications'
 import { PublicationCategories } from './collections/PublicationCategories'
 import { Jobs } from './collections/Jobs'
+import { Themes } from './collections/Themes'
 import { Employees } from './collections/Employee'
 import { OfficeLocations } from './collections/OfficeLocation'
 
@@ -43,6 +44,7 @@ export default buildConfig({
     Publications,
     PublicationCategories,
     Jobs,
+    Themes,
     Employees,
     OfficeLocations,
     Mines,

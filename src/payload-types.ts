@@ -74,6 +74,7 @@ export interface Config {
     publication: Publication;
     publicationCategory: PublicationCategory;
     job: Job;
+    theme: Theme;
     employee: Employee;
     officeLocation: OfficeLocation;
     mine: Mine;
@@ -97,6 +98,7 @@ export interface Config {
     publication: PublicationSelect<false> | PublicationSelect<true>;
     publicationCategory: PublicationCategorySelect<false> | PublicationCategorySelect<true>;
     job: JobSelect<false> | JobSelect<true>;
+    theme: ThemeSelect<false> | ThemeSelect<true>;
     employee: EmployeeSelect<false> | EmployeeSelect<true>;
     officeLocation: OfficeLocationSelect<false> | OfficeLocationSelect<true>;
     mine: MineSelect<false> | MineSelect<true>;
@@ -418,6 +420,42 @@ export interface Job {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "theme".
+ */
+export interface Theme {
+  id: number;
+  name?: string | null;
+  /**
+   * Legacy bild.
+   */
+  thumbnail?: (number | null) | Media;
+  /**
+   * Legacy text.
+   */
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Legacy projekte — pipe-delimited list of project kuerzel codes.
+   */
+  projects?: (string | Project)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "employee".
  */
 export interface Employee {
@@ -721,6 +759,10 @@ export interface PayloadLockedDocument {
         value: number | Job;
       } | null)
     | ({
+        relationTo: 'theme';
+        value: number | Theme;
+      } | null)
+    | ({
         relationTo: 'employee';
         value: number | Employee;
       } | null)
@@ -939,6 +981,18 @@ export interface JobSelect<T extends boolean = true> {
   name?: T;
   date?: T;
   content?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "theme_select".
+ */
+export interface ThemeSelect<T extends boolean = true> {
+  name?: T;
+  thumbnail?: T;
+  content?: T;
+  projects?: T;
   updatedAt?: T;
   createdAt?: T;
 }
