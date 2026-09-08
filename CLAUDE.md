@@ -113,6 +113,23 @@ optional `wipe.ts` → `run.ts` (orchestrates transform→[hydrate]→load; neve
 Env vars: `DATABASE_URL` (Postgres), `PAYLOAD_SECRET`, `WP_BASE_URL` (e.g.
 `http://webserver/intranet/wp-json/wp/v2`), `LEGACY_DB_HOST/USER/PASSWORD/NAME`.
 
+### Diagnostic/audit scripts (`src/scripts/audit/`)
+
+Not part of the extract/transform/load pattern above — one-off scripts that report on data-shape
+problems without fixing anything, written against the shared `lib/` helpers. `compare-project-slugs.ts`
+(`pnpm audit:project-slugs`) addresses [rla-intranet#76](https://github.com/TimHerrmannTU/rla-intranet/issues/76):
+werkx's legacy `projektgruppen.kuerzel` and the WordPress intranet's `projekt` CPT `kurzel` ACF
+field are two independently maintained project-code lists that have drifted apart. It fetches both
+live (legacy MySQL + WP REST, excluding `WB*` Wettbewerbe codes from both sides) and writes a diff
+report to `migration/project-slug-audit.json` — codes missing on either side, a `_SUFFIX`/trailing-
+digit heuristic that flags likely werkx-side phase/Bauabschnitt splits (e.g. `GHB3`→`GHB`) rather
+than genuine mismatches, and intranet posts whose WP slug disagrees with their own `kurzel` field
+(mostly umlaut transliteration). A real run found 662 WP `projekt` posts vs. 562 werkx rows, 314
+WP-only codes, 215 werkx-only codes (17 explained by the suffix heuristic), 16 internal slug
+mismatches — confirming in concrete numbers what "Three places project data lives today" below
+describes abstractly. Doesn't cover the issue's third source (local per-project documentation
+folders on a network share) — no accessible path/convention was available when this was written.
+
 ## The systems being consolidated
 
 This CMS's job is to become the one place these currently-separate systems all read from/write to.
