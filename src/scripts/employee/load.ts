@@ -1,6 +1,6 @@
 import type { BasePayload, Where } from 'payload'
 import { readMigrationJson } from '../lib/migration-store'
-import { fetchOfficeLocations, buildOfficeIdLookup } from '../lib/office-resolution'
+import { fetchOfficeLocations, buildOfficeIdLookup, resolveOfficeIdByName } from '../lib/office-resolution'
 import { upsertByQuery } from '../lib/payload-ops'
 
 export async function loadEmployees(payload: BasePayload): Promise<void> {
@@ -21,8 +21,13 @@ export async function loadEmployees(payload: BasePayload): Promise<void> {
         ? { email: { equals: emp.email } }
         : { and: [{ firstName: { equals: emp.firstName } }, { lastName: { equals: emp.lastName } }] }
 
-      const rawOfficeId = emp.office ? String(emp.office) : ''
-      const resolvedOfficeId = officeIdMap.has(rawOfficeId) ? officeIdMap.get(rawOfficeId)! : null
+      // `emp.office` is either a numeric Payload OfficeLocation ID string (hydrate.ts's legacy-SQL
+      // fallback) or an office name string (transform.ts's WP `linked_office` resolution) — try
+      // the numeric match first, then fall back to matching by name.
+      const rawOffice = emp.office ? String(emp.office) : ''
+      const resolvedOfficeId = rawOffice
+        ? (officeIdMap.has(rawOffice) ? officeIdMap.get(rawOffice)! : resolveOfficeIdByName(offices, rawOffice))
+        : null
 
       const { doc, created } = await upsertByQuery(payload, {
         collection: 'employee',

@@ -1,11 +1,9 @@
 import { readMigrationJson, writeMigrationJson } from '../lib/migration-store'
 import { parseIsoLikeDate } from '../lib/dates'
-import { resolveOfficeIdFromWpCategories } from '../lib/office-resolution'
 
 interface RawWpRecord {
   id: number
   title?: { rendered?: string }
-  categories?: number[]
   acf?: {
     vorname?: string
     name?: string
@@ -16,12 +14,40 @@ interface RawWpRecord {
     'uni-abschluss'?: string
     retired?: boolean | number | null
     birthday?: string
+    // WP post ID into the `standort` CPT (bare number, despite the field being admin-configured
+    // with return_format: object — resolved to an office name via standort_raw.json below).
+    linked_office?: number | { ID?: number; id?: number } | null
   }
+}
+
+interface RawWpStandortRecord {
+  id: number
+  title?: { rendered?: string }
+}
+
+function buildStandortNameLookup(records: RawWpStandortRecord[]): Map<number, string> {
+  const map = new Map<number, string>()
+  records.forEach((record) => {
+    const name = record.title?.rendered?.trim()
+    if (name) map.set(record.id, name)
+  })
+  return map
+}
+
+type LinkedOffice = number | { ID?: number; id?: number } | null | undefined
+
+function extractLinkedOfficeId(linkedOffice: LinkedOffice): number | null {
+  if (typeof linkedOffice === 'number') return linkedOffice
+  if (linkedOffice && typeof linkedOffice === 'object') {
+    return linkedOffice.ID ?? linkedOffice.id ?? null
+  }
+  return null
 }
 
 /** WP `mitarbeiter` raw JSON -> Payload Employee shape (migration/wp_raw.json -> wp_processed.json). */
 export async function transformWpEmployees(): Promise<void> {
   const rawData = readMigrationJson<RawWpRecord[]>('wp_raw.json')
+  const standortNameLookup = buildStandortNameLookup(readMigrationJson<RawWpStandortRecord[]>('standort_raw.json'))
   console.log(`Processing ${rawData.length} raw WordPress records...`)
 
   const processedRecords: Record<string, unknown>[] = []
@@ -46,7 +72,8 @@ export async function transformWpEmployees(): Promise<void> {
 
     const email = acf.email?.toLowerCase().trim() || null
     const birthday = parseIsoLikeDate(acf.birthday)
-    const officeId = resolveOfficeIdFromWpCategories(raw.categories || [])
+    const linkedOfficeId = extractLinkedOfficeId(acf.linked_office)
+    const officeName = linkedOfficeId !== null ? (standortNameLookup.get(linkedOfficeId) ?? null) : null
 
     let formerEmployee: boolean | null = null
     let exitDate: string | null = null
@@ -64,7 +91,10 @@ export async function transformWpEmployees(): Promise<void> {
       firstName: first || null,
       lastName: last || null,
       birthday,
-      office: officeId,
+      // An office NAME string (resolved via standort_raw.json), not a numeric Payload ID —
+      // load.ts resolves this by name. hydrate.ts's independent legacy-SQL fallback may instead
+      // write a numeric OfficeLocation ID string into this same field when this is null.
+      office: officeName,
 
       email,
       phone: acf.telefon?.trim() || null,

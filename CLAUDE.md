@@ -58,7 +58,9 @@ point of the project: replacing three platforms' worth of duplicated maintenance
   employees (`werkx.formerEmployee`) by default. This collection is the merge target for WordPress
   `mitarbeiter` CPT data + legacy WerkX MySQL HR data (see ETL below).
 - **OfficeLocation** — name, `leader` (relationship → employee), localized content, address
-  (`locationField`), contact group. Dresden/Berlin/Prag are the three known offices.
+  (`locationField`), contact group. Five offices exist as of 2026-09: Dresden, Berlin, Prag,
+  Peking, Guangzhou (confirmed live — Peking/Guangzhou are newer additions, not yet reflected in
+  most of this doc's older references to "the three known offices").
 - **Mines** / **MineFeatures** (group "Minescapes") — post-mining landscape data (site type,
   status, extracted materials, surface-area breakdown, recreational features). Maps to the public
   site's `mine_data` MySQL DB (see `models/maps/mine.php` in the public-site repo) — not yet
@@ -88,14 +90,25 @@ directly. Each source follows the same shape: `extract-*.ts` (standalone, networ
 second source) → `load.ts` (writes to Payload, takes the shared `payload` client as a param) →
 optional `wipe.ts` → `run.ts` (orchestrates transform→[hydrate]→load; never calls `extract-*`).
 
-- **`employee/`** — `pnpm etl:employees`. `extract-wp.ts` (`WP_BASE_URL` + `mitarbeiter` CPT) and
-  `extract-sql.ts` (legacy `mitarbeiter` MySQL table, `LEGACY_DB_*`) populate `wp_raw.json`/
-  `sql1_raw.json`. `run.ts` wipes all employees, then `transform.ts` → `wp_processed.json`,
-  `hydrate.ts` enriches with the SQL data → `wp_hydrated.json`, `load.ts` upserts into `employee`.
-  `migration/*.json` are real extracted snapshots (not fixtures, gitignored) — e.g.
-  `wp_processed.json` carries `_migrationMetadata.legacyWpId`/`legacyKuerzel`/`legacyStandort` per
-  employee for traceability, though that key isn't a real `Employee.ts` field so Payload silently
-  drops it on write (pre-existing, not fixed).
+- **`employee/`** — `pnpm etl:employees`. `extract-wp.ts` (`WP_BASE_URL` + `mitarbeiter` CPT) also
+  fetches the small `standort` CPT (5 posts) → `standort_raw.json`, and `extract-sql.ts` (legacy
+  `mitarbeiter` MySQL table, `LEGACY_DB_*`) populates `sql1_raw.json`. `run.ts` wipes all employees,
+  then `transform.ts` → `wp_processed.json`, `hydrate.ts` enriches with the SQL data →
+  `wp_hydrated.json`, `load.ts` upserts into `employee`. `migration/*.json` are real extracted
+  snapshots (not fixtures, gitignored) — e.g. `wp_processed.json` carries
+  `_migrationMetadata.legacyWpId`/`legacyKuerzel`/`legacyStandort` per employee for traceability,
+  though that key isn't a real `Employee.ts` field so Payload silently drops it on write
+  (pre-existing, not fixed).
+  - **Office resolution** (`lib/office-resolution.ts`): `transform.ts` resolves each employee's
+    ACF `linked_office` (a bare WP `standort` post ID — WordPress removed the old `category`
+    taxonomy this used to read in favor of this relationship field, commits `85f273e`/`d5364f5` in
+    the `rla-intranet` theme repo, 2026-08-20) to an office **name** via `standort_raw.json`.
+    `load.ts` then resolves that name to a Payload `OfficeLocation` via `resolveOfficeIdByName()` —
+    the same helper `werkx/load-contracts.ts` uses. Separately, `hydrate.ts` has its own
+    *independent* legacy-SQL fallback (`sqlMatch.standort`, a numeric column that happens to reuse
+    Payload's own seeded `OfficeLocation` IDs) — `load.ts` tries a numeric-ID match first
+    (`buildOfficeIdLookup`) before falling back to the name match, since `emp.office` can carry
+    either shape depending on which path resolved it.
 - **`werkx/`** — `load-projects.ts` (`pnpm etl:werkx:projects`) and `load-contracts.ts`
   (`pnpm etl:werkx:contracts`) load `migration/werkx_projects.json` / `werkx_contracts.json` —
   project records keyed by legacy short code (`color`/`creationDate` from `projektgruppen`/
