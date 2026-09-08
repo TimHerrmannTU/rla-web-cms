@@ -9,6 +9,7 @@ import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 
 import { News } from './collections/News'
+import { Awards } from './collections/Awards'
 import { Employees } from './collections/Employee'
 import { OfficeLocations } from './collections/OfficeLocation'
 
@@ -35,6 +36,7 @@ export default buildConfig({
     Users,
     Media,
     News,
+    Awards,
     Employees,
     OfficeLocations,
     Mines,

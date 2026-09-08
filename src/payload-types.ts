@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     news: News;
+    award: Award;
     employee: Employee;
     officeLocation: OfficeLocation;
     mine: Mine;
@@ -89,6 +90,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
+    award: AwardSelect<false> | AwardSelect<true>;
     employee: EmployeeSelect<false> | EmployeeSelect<true>;
     officeLocation: OfficeLocationSelect<false> | OfficeLocationSelect<true>;
     mine: MineSelect<false> | MineSelect<true>;
@@ -227,6 +229,44 @@ export interface News {
     [k: string]: unknown;
   } | null;
   externalLinks?:
+    | {
+        label: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "award".
+ */
+export interface Award {
+  id: number;
+  name?: string | null;
+  /**
+   * Legacy jahr — used as the default sort key (newest first).
+   */
+  year?: number | null;
+  thumbnail?: (number | null) | Media;
+  issuer?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  links?:
     | {
         label: string;
         url: string;
@@ -568,6 +608,10 @@ export interface PayloadLockedDocument {
         value: number | News;
       } | null)
     | ({
+        relationTo: 'award';
+        value: number | Award;
+      } | null)
+    | ({
         relationTo: 'employee';
         value: number | Employee;
       } | null)
@@ -719,6 +763,26 @@ export interface NewsSelect<T extends boolean = true> {
   thumbnail?: T;
   content?: T;
   externalLinks?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "award_select".
+ */
+export interface AwardSelect<T extends boolean = true> {
+  name?: T;
+  year?: T;
+  thumbnail?: T;
+  issuer?: T;
+  content?: T;
+  links?:
     | T
     | {
         label?: T;
