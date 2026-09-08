@@ -84,6 +84,7 @@ export interface Config {
     projectPartial: ProjectPartial;
     projectService: ProjectService;
     projectFlag: ProjectFlag;
+    projectCategory: ProjectCategory;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -108,6 +109,7 @@ export interface Config {
     projectPartial: ProjectPartialSelect<false> | ProjectPartialSelect<true>;
     projectService: ProjectServiceSelect<false> | ProjectServiceSelect<true>;
     projectFlag: ProjectFlagSelect<false> | ProjectFlagSelect<true>;
+    projectCategory: ProjectCategorySelect<false> | ProjectCategorySelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -294,6 +296,96 @@ export interface Project {
       more?: string | null;
     };
   };
+  /**
+   * Legacy type, derived from als_wettbewerb/als_projekt/objektplanung.
+   */
+  type?: ('competition' | 'object' | 'concept') | null;
+  /**
+   * Legacy dunkle_buttons.
+   */
+  usesDarkTheme?: boolean | null;
+  /**
+   * Legacy kategorie — pipe-delimited list of projektkategorien ids.
+   */
+  categories?: (number | ProjectCategory)[] | null;
+  /**
+   * Legacy ort — a short display location, distinct from the full postal address on the Location tab.
+   */
+  location?: string | null;
+  motto?: string | null;
+  /**
+   * Legacy kurzbeschreibung.
+   */
+  shortDescription?: string | null;
+  /**
+   * Legacy text.
+   */
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Legacy titelbild.
+   */
+  thumbnail?: (number | null) | Media;
+  /**
+   * Legacy auftraggeber.
+   */
+  client?: string | null;
+  /**
+   * Legacy architekt.
+   */
+  architect?: string | null;
+  /**
+   * Legacy planungspartner.
+   */
+  planningPartners?: string | null;
+  /**
+   * Legacy weitere_daten — shown as an unlabeled basic-info row.
+   */
+  additionalInfo?: string | null;
+  competition?: {
+    /**
+     * Legacy wettbewerb.
+     */
+    year?: number | null;
+    /**
+     * Legacy preis.
+     */
+    place?: number | null;
+    /**
+     * Legacy ankauf.
+     */
+    purchased?: boolean | null;
+  };
+  links?:
+    | {
+        label: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projectCategory".
+ */
+export interface ProjectCategory {
+  id: number;
+  name: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -805,6 +897,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'projectFlag';
         value: string | ProjectFlag;
+      } | null)
+    | ({
+        relationTo: 'projectCategory';
+        value: number | ProjectCategory;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1172,6 +1268,32 @@ export interface ProjectSelect<T extends boolean = true> {
               more?: T;
             };
       };
+  type?: T;
+  usesDarkTheme?: T;
+  categories?: T;
+  location?: T;
+  motto?: T;
+  shortDescription?: T;
+  description?: T;
+  thumbnail?: T;
+  client?: T;
+  architect?: T;
+  planningPartners?: T;
+  additionalInfo?: T;
+  competition?:
+    | T
+    | {
+        year?: T;
+        place?: T;
+        purchased?: T;
+      };
+  links?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1222,6 +1344,15 @@ export interface ProjectFlagSelect<T extends boolean = true> {
   phase?: T;
   linkedPartial?: T;
   linkedService?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projectCategory_select".
+ */
+export interface ProjectCategorySelect<T extends boolean = true> {
+  name?: T;
   updatedAt?: T;
   createdAt?: T;
 }

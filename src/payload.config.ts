@@ -22,6 +22,7 @@ import { ProjectPhases } from './collections/projects/ProjectPhases'
 import { ProjectPartials } from './collections/projects/ProjectPartials'
 import { ProjectServices } from './collections/projects/ProjectServices'
 import { ProjectFlags } from './collections/projects/ProjectFlags'
+import { ProjectCategories } from './collections/projects/ProjectCategories'
 
 import { Mines } from './collections/Mines'
 import { MineFeatures } from './collections/MineFeatures'
@@ -54,6 +55,7 @@ export default buildConfig({
     ProjectPartials,
     ProjectServices,
     ProjectFlags,
+    ProjectCategories,
   ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
