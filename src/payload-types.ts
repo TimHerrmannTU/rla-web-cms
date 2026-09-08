@@ -372,6 +372,10 @@ export interface Project {
     werkx?: boolean | null;
     web?: boolean | null;
   };
+  /**
+   * Legacy aehnliche_projekte — a symmetric relation on the legacy side (queried both directions), so add the link on either project.
+   */
+  similarProjects?: (string | Project)[] | null;
   adress?: {
     /**
      * @minItems 2
@@ -1148,6 +1152,7 @@ export interface ProjectSelect<T extends boolean = true> {
         werkx?: T;
         web?: T;
       };
+  similarProjects?: T;
   adress?:
     | T
     | {

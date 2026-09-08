@@ -123,6 +123,20 @@ export const Projects: CollectionConfig = {
                 },
               ],
             },
+            {
+              name: 'similarProjects',
+              label: 'Similar Projects',
+              type: 'relationship',
+              relationTo: 'project',
+              hasMany: true,
+              filterOptions: ({ id }) => ({
+                id: { not_equals: id },
+              }),
+              admin: {
+                description:
+                  'Legacy aehnliche_projekte — a symmetric relation on the legacy side (queried both directions), so add the link on either project.',
+              },
+            },
           ],
         },
         {
