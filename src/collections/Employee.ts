@@ -66,6 +66,7 @@ export const Employees: CollectionConfig = {
             {
               name: 'content',
               type: 'richText',
+              localized: true,
               editor: lexicalEditor({
                 features: ({ defaultFeatures }) => [...defaultFeatures, FixedToolbarFeature()],
               }),

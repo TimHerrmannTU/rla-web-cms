@@ -19,6 +19,7 @@ export const OfficeLocations: CollectionConfig = {
             {
               name: 'name',
               type: 'text',
+              localized: true,
             },
             {
               name: 'leader',

@@ -45,6 +45,7 @@ export const News: CollectionConfig = {
             {
               name: 'label',
               type: 'text',
+              localized: true,
               required: true,
               admin: {
                 width: '40%',

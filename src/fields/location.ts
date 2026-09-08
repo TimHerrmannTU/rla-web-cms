@@ -25,10 +25,12 @@ export const locationField: Field = {
             {
               name: 'country',
               type: 'text',
+              localized: true,
             },
             {
               name: 'city',
               type: 'text',
+              localized: true,
             },
             {
               name: 'zip',
@@ -41,6 +43,7 @@ export const locationField: Field = {
             {
               name: 'more',
               type: 'text',
+              localized: true,
             },
           ],
           admin: {

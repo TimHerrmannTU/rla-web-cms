@@ -19,6 +19,7 @@ export const Mines: CollectionConfig = {
             {
               name: 'title',
               type: 'text',
+              localized: true,
               required: true,
             },
             {
@@ -34,6 +35,7 @@ export const Mines: CollectionConfig = {
             {
               name: 'content',
               type: 'richText',
+              localized: true,
               editor: lexicalEditor({
                 features: ({ defaultFeatures }) => [...defaultFeatures, FixedToolbarFeature()],
               }),
