@@ -71,6 +71,8 @@ export interface Config {
     media: Media;
     news: News;
     award: Award;
+    publication: Publication;
+    publicationCategory: PublicationCategory;
     employee: Employee;
     officeLocation: OfficeLocation;
     mine: Mine;
@@ -91,6 +93,8 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
     award: AwardSelect<false> | AwardSelect<true>;
+    publication: PublicationSelect<false> | PublicationSelect<true>;
+    publicationCategory: PublicationCategorySelect<false> | PublicationCategorySelect<true>;
     employee: EmployeeSelect<false> | EmployeeSelect<true>;
     officeLocation: OfficeLocationSelect<false> | OfficeLocationSelect<true>;
     mine: MineSelect<false> | MineSelect<true>;
@@ -273,6 +277,111 @@ export interface Award {
         id?: string | null;
       }[]
     | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "publication".
+ */
+export interface Publication {
+  id: number;
+  /**
+   * Legacy name/buch — publication titles are not localized in the legacy data.
+   */
+  name?: string | null;
+  /**
+   * Legacy untertitel/buchuntertitel.
+   */
+  subtitle?: string | null;
+  category?: (number | null) | PublicationCategory;
+  /**
+   * Legacy jahr — used as the default sort key (newest first).
+   */
+  year?: number | null;
+  thumbnail?: (number | null) | Media;
+  /**
+   * Legacy zeitschrift.
+   */
+  journal?: string | null;
+  /**
+   * Legacy verlag.
+   */
+  publisher?: string | null;
+  /**
+   * Legacy autor.
+   */
+  author?: string | null;
+  /**
+   * Legacy hrsg.
+   */
+  editor?: string | null;
+  /**
+   * Legacy seiten — kept as text since legacy values include ranges (e.g. "12-34").
+   */
+  pages?: string | null;
+  /**
+   * Legacy datei.
+   */
+  file?: (number | null) | Media;
+  url?: string | null;
+  /**
+   * Legacy projekte — pipe-delimited list of project kuerzel codes.
+   */
+  projects?: (string | Project)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "publicationCategory".
+ */
+export interface PublicationCategory {
+  id: number;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "project".
+ */
+export interface Project {
+  id: string;
+  creationDate?: string | null;
+  name: string;
+  status?: ('planning' | 'construction' | 'done' | 'partially_done' | 'finished' | 'paused' | 'canceled') | null;
+  /**
+   * can be forecast aswell
+   */
+  yearCompletion?: number | null;
+  /**
+   * in ha
+   */
+  surfaceArea?: number | null;
+  /**
+   * hex code only
+   */
+  color?: string | null;
+  active_in?: {
+    intranet?: boolean | null;
+    werkx?: boolean | null;
+    web?: boolean | null;
+  };
+  adress?: {
+    /**
+     * @minItems 2
+     * @maxItems 2
+     */
+    coords?: [number, number] | null;
+    details?: {
+      country?: string | null;
+      city?: string | null;
+      zip?: string | null;
+      street?: string | null;
+      more?: string | null;
+    };
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -474,49 +583,6 @@ export interface MineFeature {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "project".
- */
-export interface Project {
-  id: string;
-  creationDate?: string | null;
-  name: string;
-  status?: ('planning' | 'construction' | 'done' | 'partially_done' | 'finished' | 'paused' | 'canceled') | null;
-  /**
-   * can be forecast aswell
-   */
-  yearCompletion?: number | null;
-  /**
-   * in ha
-   */
-  surfaceArea?: number | null;
-  /**
-   * hex code only
-   */
-  color?: string | null;
-  active_in?: {
-    intranet?: boolean | null;
-    werkx?: boolean | null;
-    web?: boolean | null;
-  };
-  adress?: {
-    /**
-     * @minItems 2
-     * @maxItems 2
-     */
-    coords?: [number, number] | null;
-    details?: {
-      country?: string | null;
-      city?: string | null;
-      zip?: string | null;
-      street?: string | null;
-      more?: string | null;
-    };
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "projectPhase".
  */
 export interface ProjectPhase {
@@ -610,6 +676,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'award';
         value: number | Award;
+      } | null)
+    | ({
+        relationTo: 'publication';
+        value: number | Publication;
+      } | null)
+    | ({
+        relationTo: 'publicationCategory';
+        value: number | PublicationCategory;
       } | null)
     | ({
         relationTo: 'employee';
@@ -789,6 +863,36 @@ export interface AwardSelect<T extends boolean = true> {
         url?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "publication_select".
+ */
+export interface PublicationSelect<T extends boolean = true> {
+  name?: T;
+  subtitle?: T;
+  category?: T;
+  year?: T;
+  thumbnail?: T;
+  journal?: T;
+  publisher?: T;
+  author?: T;
+  editor?: T;
+  pages?: T;
+  file?: T;
+  url?: T;
+  projects?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "publicationCategory_select".
+ */
+export interface PublicationCategorySelect<T extends boolean = true> {
+  name?: T;
   updatedAt?: T;
   createdAt?: T;
 }

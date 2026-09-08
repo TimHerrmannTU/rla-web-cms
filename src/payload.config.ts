@@ -10,6 +10,8 @@ import { Media } from './collections/Media'
 
 import { News } from './collections/News'
 import { Awards } from './collections/Awards'
+import { Publications } from './collections/Publications'
+import { PublicationCategories } from './collections/PublicationCategories'
 import { Employees } from './collections/Employee'
 import { OfficeLocations } from './collections/OfficeLocation'
 
@@ -37,6 +39,8 @@ export default buildConfig({
     Media,
     News,
     Awards,
+    Publications,
+    PublicationCategories,
     Employees,
     OfficeLocations,
     Mines,
