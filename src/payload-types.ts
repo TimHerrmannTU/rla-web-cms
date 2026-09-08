@@ -287,7 +287,7 @@ export interface Award {
 export interface Publication {
   id: number;
   /**
-   * Legacy name/buch — publication titles are not localized in the legacy data.
+   * Legacy name/buch.
    */
   name?: string | null;
   /**

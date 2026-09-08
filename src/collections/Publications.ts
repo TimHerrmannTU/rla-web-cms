@@ -11,13 +11,15 @@ export const Publications: CollectionConfig = {
       name: 'name',
       label: 'Name / Book Title',
       type: 'text',
+      localized: true,
       admin: {
-        description: 'Legacy name/buch — publication titles are not localized in the legacy data.',
+        description: 'Legacy name/buch.',
       },
     },
     {
       name: 'subtitle',
       type: 'text',
+      localized: true,
       admin: {
         description: 'Legacy untertitel/buchuntertitel.',
       },
@@ -46,6 +48,7 @@ export const Publications: CollectionConfig = {
           name: 'journal',
           label: 'Journal',
           type: 'text',
+          localized: true,
           admin: {
             width: '50%',
             description: 'Legacy zeitschrift.',
@@ -55,6 +58,7 @@ export const Publications: CollectionConfig = {
           name: 'publisher',
           label: 'Publisher',
           type: 'text',
+          localized: true,
           admin: {
             width: '50%',
             description: 'Legacy verlag.',
@@ -69,6 +73,7 @@ export const Publications: CollectionConfig = {
           name: 'author',
           label: 'Author',
           type: 'text',
+          localized: true,
           admin: {
             width: '50%',
             description: 'Legacy autor.',
@@ -78,6 +83,7 @@ export const Publications: CollectionConfig = {
           name: 'editor',
           label: 'Editor',
           type: 'text',
+          localized: true,
           admin: {
             width: '50%',
             description: 'Legacy hrsg.',
