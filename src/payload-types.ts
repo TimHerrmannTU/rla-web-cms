@@ -243,6 +243,57 @@ export interface News {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Legacy acf.interner_link (WP post ID into the projekt CPT).
+   */
+  project?: (string | null) | Project;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "project".
+ */
+export interface Project {
+  id: string;
+  creationDate?: string | null;
+  name: string;
+  status?: ('planning' | 'construction' | 'done' | 'partially_done' | 'finished' | 'paused' | 'canceled') | null;
+  /**
+   * can be forecast aswell
+   */
+  yearCompletion?: number | null;
+  /**
+   * in ha
+   */
+  surfaceArea?: number | null;
+  /**
+   * hex code only
+   */
+  color?: string | null;
+  active_in?: {
+    intranet?: boolean | null;
+    werkx?: boolean | null;
+    web?: boolean | null;
+  };
+  /**
+   * Legacy aehnliche_projekte — a symmetric relation on the legacy side (queried both directions), so add the link on either project.
+   */
+  similarProjects?: (string | Project)[] | null;
+  adress?: {
+    /**
+     * @minItems 2
+     * @maxItems 2
+     */
+    coords?: [number, number] | null;
+    details?: {
+      country?: string | null;
+      city?: string | null;
+      zip?: string | null;
+      street?: string | null;
+      more?: string | null;
+    };
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -343,53 +394,6 @@ export interface Publication {
 export interface PublicationCategory {
   id: number;
   name: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "project".
- */
-export interface Project {
-  id: string;
-  creationDate?: string | null;
-  name: string;
-  status?: ('planning' | 'construction' | 'done' | 'partially_done' | 'finished' | 'paused' | 'canceled') | null;
-  /**
-   * can be forecast aswell
-   */
-  yearCompletion?: number | null;
-  /**
-   * in ha
-   */
-  surfaceArea?: number | null;
-  /**
-   * hex code only
-   */
-  color?: string | null;
-  active_in?: {
-    intranet?: boolean | null;
-    werkx?: boolean | null;
-    web?: boolean | null;
-  };
-  /**
-   * Legacy aehnliche_projekte — a symmetric relation on the legacy side (queried both directions), so add the link on either project.
-   */
-  similarProjects?: (string | Project)[] | null;
-  adress?: {
-    /**
-     * @minItems 2
-     * @maxItems 2
-     */
-    coords?: [number, number] | null;
-    details?: {
-      country?: string | null;
-      city?: string | null;
-      zip?: string | null;
-      street?: string | null;
-      more?: string | null;
-    };
-  };
   updatedAt: string;
   createdAt: string;
 }
@@ -924,6 +928,7 @@ export interface NewsSelect<T extends boolean = true> {
         url?: T;
         id?: T;
       };
+  project?: T;
   updatedAt?: T;
   createdAt?: T;
 }

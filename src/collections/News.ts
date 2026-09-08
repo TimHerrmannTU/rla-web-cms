@@ -65,6 +65,13 @@ export const News: CollectionConfig = {
         },
       ],
     },
-    // TODO add relationship to project
+    {
+      name: 'project',
+      type: 'relationship',
+      relationTo: 'project',
+      admin: {
+        description: 'Legacy acf.interner_link (WP post ID into the projekt CPT).',
+      },
+    },
   ],
 }
