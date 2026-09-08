@@ -73,6 +73,7 @@ export interface Config {
     award: Award;
     publication: Publication;
     publicationCategory: PublicationCategory;
+    job: Job;
     employee: Employee;
     officeLocation: OfficeLocation;
     mine: Mine;
@@ -95,6 +96,7 @@ export interface Config {
     award: AwardSelect<false> | AwardSelect<true>;
     publication: PublicationSelect<false> | PublicationSelect<true>;
     publicationCategory: PublicationCategorySelect<false> | PublicationCategorySelect<true>;
+    job: JobSelect<false> | JobSelect<true>;
     employee: EmployeeSelect<false> | EmployeeSelect<true>;
     officeLocation: OfficeLocationSelect<false> | OfficeLocationSelect<true>;
     mine: MineSelect<false> | MineSelect<true>;
@@ -382,6 +384,35 @@ export interface Project {
       more?: string | null;
     };
   };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "job".
+ */
+export interface Job {
+  id: number;
+  name?: string | null;
+  /**
+   * Legacy datum — used as the default sort key (newest first).
+   */
+  date?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -686,6 +717,10 @@ export interface PayloadLockedDocument {
         value: number | PublicationCategory;
       } | null)
     | ({
+        relationTo: 'job';
+        value: number | Job;
+      } | null)
+    | ({
         relationTo: 'employee';
         value: number | Employee;
       } | null)
@@ -893,6 +928,17 @@ export interface PublicationSelect<T extends boolean = true> {
  */
 export interface PublicationCategorySelect<T extends boolean = true> {
   name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "job_select".
+ */
+export interface JobSelect<T extends boolean = true> {
+  name?: T;
+  date?: T;
+  content?: T;
   updatedAt?: T;
   createdAt?: T;
 }
