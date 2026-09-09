@@ -6,6 +6,10 @@
 .pnp.js
 .yarn/install-state.gz
 
+# this project uses pnpm (pnpm-lock.yaml) — ignore npm's lockfile so it can't get
+# silently re-tracked by a stray `npm install`
+package-lock.json
+
 /.idea/*
 !/.idea/runConfigurations
 
