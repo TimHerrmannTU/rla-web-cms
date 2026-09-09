@@ -13,8 +13,7 @@ this project is absorbing data from.
 ## Stack
 
 - [Payload CMS 3](https://payloadcms.com/) on [Next.js 16](https://nextjs.org/)
-- **Postgres** via `@payloadcms/db-postgres` (not Mongo, despite the `docker-compose.yml` still
-  defaulting to a Mongo service — see [Local development](#local-development) below)
+- **Postgres** via `@payloadcms/db-postgres` (not Mongo)
 - Localization: `de` (default) / `en`, with fallback
 - [Leaflet](https://leafletjs.com/) for the custom map/location field
 
@@ -41,9 +40,19 @@ this project is absorbing data from.
 3. Open `http://localhost:3000/admin` and follow the on-screen instructions to create your first
    admin user.
 
-`docker-compose.yml` in this repo is unmodified template boilerplate (still spins up Mongo, not
-Postgres) — don't use it as-is; point `DATABASE_URL` at a real or locally-run Postgres instance
-instead.
+### Docker (optional)
+
+`docker-compose.yml` spins up a local Postgres instance alongside the app for local development
+(not the same thing as the standalone `Dockerfile`, which is a separate production-image build not
+wired into this compose file):
+
+```sh
+docker compose up
+```
+
+Point `DATABASE_URL` in `.env` at `postgresql://payload:payload@postgres:5432/payload` (or
+whatever `POSTGRES_USER`/`POSTGRES_PASSWORD`/`POSTGRES_DB` you set in `docker-compose.yml`) to use
+it.
 
 ## Scripts
 
