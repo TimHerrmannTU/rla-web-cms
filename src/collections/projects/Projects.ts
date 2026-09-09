@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 import { lexicalEditor, FixedToolbarFeature } from '@payloadcms/richtext-lexical'
 import { locationField } from '@/fields/location'
 import { colorField } from '@/fields/color'
+import { flowField } from '@/fields/flow'
 
 export const Projects: CollectionConfig = {
   slug: 'project',
@@ -147,7 +148,7 @@ export const Projects: CollectionConfig = {
         {
           label: 'Website',
           description:
-            'Fields sourced from the public website (website_rla/1_php models/project.php). The legacy bilder_flow column is not covered here yet — blocked on #7.',
+            'Fields sourced from the public website (website_rla/1_php models/project.php).',
           fields: [
             {
               type: 'row',
@@ -335,7 +336,7 @@ export const Projects: CollectionConfig = {
                 },
               ],
             },
-            // TODO add flow/gallery field once #7 lands — legacy bilder_flow column
+            flowField('Legacy projekte.bilder_flow column.'),
           ],
         },
       ],

@@ -249,6 +249,11 @@ export interface News {
    * Legacy acf.interner_link (WP post ID into the projekt CPT).
    */
   project?: (string | null) | Project;
+  /**
+   * Mixed content stream of images, text, news references, topic references, and separators. No legacy source — net-new capability, not backed by any existing column.
+   */
+  flow?:
+    (FlowImageBlock | FlowTextBlock | FlowNewsReferenceBlock | FlowTopicReferenceBlock | FlowSeparatorBlock)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -376,6 +381,11 @@ export interface Project {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Mixed content stream of images, text, news references, topic references, and separators. Legacy projekte.bilder_flow column.
+   */
+  flow?:
+    (FlowImageBlock | FlowTextBlock | FlowNewsReferenceBlock | FlowTopicReferenceBlock | FlowSeparatorBlock)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -388,6 +398,158 @@ export interface ProjectCategory {
   name: string;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FlowImageBlock".
+ */
+export interface FlowImageBlock {
+  image: number | Media;
+  /**
+   * Optional. Legacy never let editors set this directly — it was computed at render time from the image's project association. Leave blank to match legacy behavior, or set explicitly.
+   */
+  caption?: string | null;
+  /**
+   * Optional click-through override (see caption note).
+   */
+  link?: string | null;
+  /**
+   * Legacy css size token — grid-column span out of 12.
+   */
+  size?: ('one6' | 'one4' | 'one3' | 'one2' | 'two3' | 'full') | null;
+  /**
+   * Legacy css modifier tokens — freely combinable.
+   */
+  modifiers?: ('clear' | 'right' | 'center' | 'crop' | 'topmargin')[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'image';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FlowTextBlock".
+ */
+export interface FlowTextBlock {
+  title?: string | null;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Optional accompanying image. Legacy parsed this (textelemente.bild) but a rendering bug meant it was never actually shown — this field revives the intent; the consuming frontend must be built to render it, unlike legacy.
+   */
+  image?: (number | null) | Media;
+  /**
+   * Legacy css size token — grid-column span out of 12.
+   */
+  size?: ('one6' | 'one4' | 'one3' | 'one2' | 'two3' | 'full') | null;
+  /**
+   * Legacy css modifier tokens — freely combinable.
+   */
+  modifiers?: ('clear' | 'right' | 'center' | 'crop' | 'topmargin')[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'text';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FlowNewsReferenceBlock".
+ */
+export interface FlowNewsReferenceBlock {
+  news: number | News;
+  /**
+   * Legacy css size token — grid-column span out of 12.
+   */
+  size?: ('one6' | 'one4' | 'one3' | 'one2' | 'two3' | 'full') | null;
+  /**
+   * Legacy css modifier tokens — freely combinable.
+   */
+  modifiers?: ('clear' | 'right' | 'center' | 'crop' | 'topmargin')[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'newsReference';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FlowTopicReferenceBlock".
+ */
+export interface FlowTopicReferenceBlock {
+  /**
+   * Renders as an image tile using the theme's own thumbnail + name; always gets the legacy has-overlay caption style (auto-applied, not configurable). No separate caption field — the theme's name is the display caption.
+   */
+  theme: number | Theme;
+  /**
+   * Legacy css size token — grid-column span out of 12.
+   */
+  size?: ('one6' | 'one4' | 'one3' | 'one2' | 'two3' | 'full') | null;
+  /**
+   * Legacy css modifier tokens — freely combinable.
+   */
+  modifiers?: ('clear' | 'right' | 'center' | 'crop' | 'topmargin')[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'topicReference';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "theme".
+ */
+export interface Theme {
+  id: number;
+  name?: string | null;
+  /**
+   * Legacy bild.
+   */
+  thumbnail?: (number | null) | Media;
+  /**
+   * Legacy text.
+   */
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Legacy projekte — pipe-delimited list of project kuerzel codes.
+   */
+  projects?: (string | Project)[] | null;
+  /**
+   * Mixed content stream of images, text, news references, topic references, and separators. Legacy themen.flow column.
+   */
+  flow?:
+    (FlowImageBlock | FlowTextBlock | FlowNewsReferenceBlock | FlowTopicReferenceBlock | FlowSeparatorBlock)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FlowSeparatorBlock".
+ */
+export interface FlowSeparatorBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'separator';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -515,42 +677,6 @@ export interface Job {
     };
     [k: string]: unknown;
   } | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "theme".
- */
-export interface Theme {
-  id: number;
-  name?: string | null;
-  /**
-   * Legacy bild.
-   */
-  thumbnail?: (number | null) | Media;
-  /**
-   * Legacy text.
-   */
-  content?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  /**
-   * Legacy projekte — pipe-delimited list of project kuerzel codes.
-   */
-  projects?: (string | Project)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1025,8 +1151,73 @@ export interface NewsSelect<T extends boolean = true> {
         id?: T;
       };
   project?: T;
+  flow?:
+    | T
+    | {
+        image?: T | FlowImageBlockSelect<T>;
+        text?: T | FlowTextBlockSelect<T>;
+        newsReference?: T | FlowNewsReferenceBlockSelect<T>;
+        topicReference?: T | FlowTopicReferenceBlockSelect<T>;
+        separator?: T | FlowSeparatorBlockSelect<T>;
+      };
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FlowImageBlock_select".
+ */
+export interface FlowImageBlockSelect<T extends boolean = true> {
+  image?: T;
+  caption?: T;
+  link?: T;
+  size?: T;
+  modifiers?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FlowTextBlock_select".
+ */
+export interface FlowTextBlockSelect<T extends boolean = true> {
+  title?: T;
+  body?: T;
+  image?: T;
+  size?: T;
+  modifiers?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FlowNewsReferenceBlock_select".
+ */
+export interface FlowNewsReferenceBlockSelect<T extends boolean = true> {
+  news?: T;
+  size?: T;
+  modifiers?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FlowTopicReferenceBlock_select".
+ */
+export interface FlowTopicReferenceBlockSelect<T extends boolean = true> {
+  theme?: T;
+  size?: T;
+  modifiers?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FlowSeparatorBlock_select".
+ */
+export interface FlowSeparatorBlockSelect<T extends boolean = true> {
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1098,6 +1289,15 @@ export interface ThemeSelect<T extends boolean = true> {
   thumbnail?: T;
   content?: T;
   projects?: T;
+  flow?:
+    | T
+    | {
+        image?: T | FlowImageBlockSelect<T>;
+        text?: T | FlowTextBlockSelect<T>;
+        newsReference?: T | FlowNewsReferenceBlockSelect<T>;
+        topicReference?: T | FlowTopicReferenceBlockSelect<T>;
+        separator?: T | FlowSeparatorBlockSelect<T>;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1293,6 +1493,15 @@ export interface ProjectSelect<T extends boolean = true> {
         label?: T;
         url?: T;
         id?: T;
+      };
+  flow?:
+    | T
+    | {
+        image?: T | FlowImageBlockSelect<T>;
+        text?: T | FlowTextBlockSelect<T>;
+        newsReference?: T | FlowNewsReferenceBlockSelect<T>;
+        topicReference?: T | FlowTopicReferenceBlockSelect<T>;
+        separator?: T | FlowSeparatorBlockSelect<T>;
       };
   updatedAt?: T;
   createdAt?: T;

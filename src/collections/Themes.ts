@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { lexicalEditor, FixedToolbarFeature } from '@payloadcms/richtext-lexical'
+import { flowField } from '@/fields/flow'
 
 export const Themes: CollectionConfig = {
   slug: 'theme',
@@ -42,8 +43,6 @@ export const Themes: CollectionConfig = {
         description: 'Legacy projekte — pipe-delimited list of project kuerzel codes.',
       },
     },
-    // TODO add flow/gallery field once #7 lands — legacy `flow` column renders a Flow of
-    // image/text/news-ref/topic-ref blocks (see 1_php/models/flow.php), same field #7 will
-    // also add to Projects and News.
+    flowField('Legacy themen.flow column.'),
   ],
 }

@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { lexicalEditor, FixedToolbarFeature } from '@payloadcms/richtext-lexical'
+import { flowField } from '@/fields/flow'
 
 export const News: CollectionConfig = {
   slug: 'news',
@@ -73,5 +74,6 @@ export const News: CollectionConfig = {
         description: 'Legacy acf.interner_link (WP post ID into the projekt CPT).',
       },
     },
+    flowField('No legacy source — net-new capability, not backed by any existing column.'),
   ],
 }
