@@ -1,67 +1,76 @@
-# Payload Blank Template
+# rla-web-cms
 
-This template comes configured with the bare minimum to get started on anything you need.
+Payload CMS 3 / Next.js app that is becoming the single, unified content-management platform for
+Rehwaldt Landschaftsarchitekten (RLA), consolidating data that today lives scattered across
+several disjointed legacy systems (a WordPress intranet, a PHP public website, and a separate
+time-tracking API). It is early-stage: most collections exist and an ETL pipeline pulls in real
+legacy data, but this is not yet the system of record for anything — it's being built up
+collection by collection.
 
-## Quick start
+See [CLAUDE.md](./CLAUDE.md) for the full architecture, consolidation plan, and the legacy systems
+this project is absorbing data from.
 
-This template can be deployed directly from our Cloud hosting and it will setup MongoDB and cloud S3 object storage for media.
+## Stack
 
-## Quick Start - local setup
+- [Payload CMS 3](https://payloadcms.com/) on [Next.js 16](https://nextjs.org/)
+- **Postgres** via `@payloadcms/db-postgres` (not Mongo, despite the `docker-compose.yml` still
+  defaulting to a Mongo service — see [Local development](#local-development) below)
+- Localization: `de` (default) / `en`, with fallback
+- [Leaflet](https://leafletjs.com/) for the custom map/location field
 
-To spin up this template locally, follow these steps:
+## Local development
 
-### Clone
+1. Copy the example environment file and fill in real values:
 
-After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
+   ```sh
+   cp .env.example .env
+   ```
 
-### Development
+   - `DATABASE_URL` — a Postgres connection string
+   - `PAYLOAD_SECRET` — any random string
+   - `WP_BASE_URL`, `LEGACY_DB_*` — only needed to run the ETL scripts (see below), not for
+     general development
 
-1. First [clone the repo](#clone) if you have not done so already
-2. `cd my-project && cp .env.example .env` to copy the example environment variables. You'll need to add the `MONGODB_URL` from your Cloud project to your `.env` if you want to use S3 storage and the MongoDB database that was created for you.
+2. Install dependencies and start the dev server:
 
-3. `pnpm install && pnpm dev` to install dependencies and start the dev server
-4. open `http://localhost:3000` to open the app in your browser
+   ```sh
+   pnpm install
+   pnpm dev
+   ```
 
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
+3. Open `http://localhost:3000/admin` and follow the on-screen instructions to create your first
+   admin user.
 
-#### Docker (Optional)
+`docker-compose.yml` in this repo is unmodified template boilerplate (still spins up Mongo, not
+Postgres) — don't use it as-is; point `DATABASE_URL` at a real or locally-run Postgres instance
+instead.
 
-If you prefer to use Docker for local development instead of a local MongoDB instance, the provided docker-compose.yml file can be used.
+## Scripts
 
-To do so, follow these steps:
+| Command | Purpose |
+|---|---|
+| `pnpm dev` / `pnpm build` / `pnpm start` | Standard Next.js dev/build/start |
+| `pnpm generate:types` | Regenerates `src/payload-types.ts` from the collection configs — run after any collection/field change |
+| `pnpm generate:importmap` | Regenerates Payload's admin import map |
+| `pnpm lint` | ESLint |
+| `pnpm test` | Runs both `test:int` (Vitest) and `test:e2e` (Playwright) |
 
-- Modify the `MONGODB_URL` in your `.env` file to `mongodb://127.0.0.1/<dbname>`
-- Modify the `docker-compose.yml` file's `MONGODB_URL` to match the above `<dbname>`
-- Run `docker-compose up` to start the database, optionally pass `-d` to run in the background.
+## ETL pipeline
 
-## How it works
+Legacy data (WordPress, MySQL) is migrated into Payload via scripts in `src/scripts/`, one folder
+per source:
 
-The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
+| Command | Source |
+|---|---|
+| `pnpm etl:employees` | WordPress `mitarbeiter` CPT + legacy WerkX MySQL HR data → `Employee` |
+| `pnpm etl:news` | WordPress `news` CPT → `News` |
+| `pnpm etl:werkx:projects` / `pnpm etl:werkx:contracts` | `rla-werkx-api`'s own exported project/contract data → `Projects` / Employee WerkX contracts |
 
-### Collections
+See CLAUDE.md's "ETL pipeline" section for the full extract/transform/load shape these follow, and
+issue tracking in this repo's GitHub issues for which collections still lack an ETL entirely.
 
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
+## Collections
 
-- #### Users (Authentication)
-
-  Users are auth-enabled collections that have access to the admin panel.
-
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/3.x/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
-
-- #### Media
-
-  This is the uploads enabled collection. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
-
-### Docker
-
-Alternatively, you can use [Docker](https://www.docker.com) to spin up this template locally. To do so, follow these steps:
-
-1. Follow [steps 1 and 2 from above](#development), the docker-compose file will automatically use the `.env` file in your project root
-1. Next run `docker-compose up`
-1. Follow [steps 4 and 5 from above](#development) to login and create your first admin user
-
-That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
-
-## Questions
-
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+Users, Media, News, Awards, Publications (+ Publication Categories), Jobs, Employee, Office
+Location, Mines (+ Mine Features), Themes, and Projects (+ Project Phases / Partials / Services /
+Flags / Categories) — see CLAUDE.md for what each one models and the legacy system it's replacing.
